@@ -172,6 +172,17 @@ window.QRStorage = {
     }
 
     localStorage.setItem(STORAGE_KEYS.QRS, JSON.stringify(qrs));
+
+    // SYNC TO SERVER
+    fetch('/api/qrcodes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(qrData)
+    })
+    .then(res => res.json())
+    .then(data => console.log('Successfully synced QR to server:', data))
+    .catch(err => console.error('Failed to sync QR to server:', err));
+
     return qrData;
   },
 
@@ -182,6 +193,17 @@ window.QRStorage = {
       target.destinationUrl = newUrl;
       target.updatedAt = new Date().toISOString();
       localStorage.setItem(STORAGE_KEYS.QRS, JSON.stringify(qrs));
+
+      // SYNC TO SERVER
+      fetch(`/api/qrcodes/${id}/destination`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destinationUrl: newUrl })
+      })
+      .then(res => res.json())
+      .then(data => console.log('Successfully synced update to server:', data))
+      .catch(err => console.error('Failed to sync update to server:', err));
+
       return true;
     }
     return false;
@@ -194,6 +216,14 @@ window.QRStorage = {
       target.active = !target.active;
       target.updatedAt = new Date().toISOString();
       localStorage.setItem(STORAGE_KEYS.QRS, JSON.stringify(qrs));
+      
+      // SYNC TO SERVER (Send updated QR model)
+      fetch('/api/qrcodes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(target)
+      }).catch(err => console.error('Failed to sync toggle state:', err));
+
       return target.active;
     }
     return null;
@@ -208,6 +238,14 @@ window.QRStorage = {
     let analytics = this.getAllAnalytics();
     analytics = analytics.filter(a => a.qrId !== id);
     localStorage.setItem(STORAGE_KEYS.ANALYTICS, JSON.stringify(analytics));
+
+    // SYNC TO SERVER
+    fetch(`/api/qrcodes/${id}`, {
+      method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(data => console.log('Successfully synced delete to server:', data))
+    .catch(err => console.error('Failed to sync delete to server:', err));
   },
 
   // Analytics API

@@ -41,6 +41,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial QR Draw
   updateLivePreview();
 
+  // Sync state from server on startup
+  function syncFromServer() {
+    fetch('/api/qrcodes')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data)) {
+          // If we got items from the server, update local storage to match server database
+          localStorage.setItem('qr_track_qrcodes_v1', JSON.stringify(data));
+          // If on dashboard, re-render to show updated items
+          const activeTab = document.querySelector('.nav-btn.active')?.getAttribute('data-tab');
+          if (activeTab === 'dashboard') {
+            renderDashboard();
+          }
+        }
+      })
+      .catch(err => console.error('Failed to sync on startup:', err));
+  }
+  syncFromServer();
+
   // --- 1. NAVIGATION & TABS ---
   function initNavigation() {
     const navButtons = document.querySelectorAll('.nav-btn');

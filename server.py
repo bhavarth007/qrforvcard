@@ -142,20 +142,72 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
 # --- DYNAMIC SHORT-CODE ROUTER ---
 @app.get("/q/{short_code}")
 async def dynamic_redirect(short_code: str, request: Request):
+
+    # Special case: "preview" is the placeholder used in the live QR preview
+    # before the user clicks Save. Show a friendly instructional page.
+    if short_code == "preview":
+        return HTMLResponse(status_code=200, content="""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>QR Preview - Not Saved Yet</title>
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+                body { background:#090d16; color:#f8fafc; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+                .card { background:rgba(18,24,39,.9); border:1px solid rgba(255,255,255,.1); border-radius:24px; padding:2.5rem 2rem; max-width:380px; text-align:center; }
+                .icon { font-size:3.5rem; margin-bottom:1rem; }
+                h1 { font-size:1.4rem; font-weight:800; margin-bottom:.75rem; color:#f59e0b; }
+                p { color:#94a3b8; font-size:.9rem; line-height:1.6; margin-bottom:1.5rem; }
+                .badge { background:rgba(99,102,241,.15); color:#818cf8; border:1px solid rgba(99,102,241,.3); border-radius:999px; padding:.4rem 1rem; font-size:.82rem; font-weight:600; display:inline-block; }
+                a { color:#6366f1; text-decoration:none; font-weight:600; }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <div class="icon">⚠️</div>
+                <h1>QR Not Saved Yet</h1>
+                <p>This is a <strong>live preview</strong> QR code — it hasn't been saved to the database yet.</p>
+                <p>Go back to the generator, fill in your details, then click <strong>"💾 Save &amp; Store QR Code"</strong> to make this QR permanent and scannable.</p>
+                <span class="badge">Preview Mode — Data Not Stored</span>
+            </div>
+        </body>
+        </html>
+        """)
+
     db = load_db()
     qr = next((q for q in db.get("qrcodes", []) if q.get("shortCode") == short_code), None)
 
     if not qr:
         return HTMLResponse(
             status_code=404,
-            content="""
+            content=f"""
             <!DOCTYPE html>
-            <html>
-                <head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>404 Not Found</title></head>
-                <body style="background:#090d16; color:#fff; font-family:sans-serif; text-align:center; padding:50px 20px;">
-                    <h1 style="color:#f43f5e">404 - QR Code Not Found</h1>
-                    <p style="color:#94a3b8">Short link /q/""" + short_code + """ is invalid or removed.</p>
-                </body>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>404 - QR Not Found</title>
+                <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+                <style>
+                    * {{ margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }}
+                    body {{ background:#090d16; color:#f8fafc; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; text-align:center; }}
+                    .card {{ background:rgba(18,24,39,.9); border:1px solid rgba(244,63,94,.2); border-radius:24px; padding:2.5rem 2rem; max-width:380px; }}
+                    .icon {{ font-size:3.5rem; margin-bottom:1rem; }}
+                    h1 {{ font-size:1.4rem; font-weight:800; color:#f43f5e; margin-bottom:.75rem; }}
+                    p {{ color:#94a3b8; font-size:.88rem; line-height:1.6; }}
+                    code {{ background:rgba(255,255,255,.07); padding:.2rem .5rem; border-radius:6px; font-family:monospace; color:#818cf8; }}
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <div class="icon">🔍</div>
+                    <h1>QR Code Not Found</h1>
+                    <p>Short link <code>/q/{short_code}</code> is invalid, expired, or was deleted.</p>
+                </div>
+            </body>
             </html>
             """
         )

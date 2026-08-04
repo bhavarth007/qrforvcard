@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Track - Self-Hosted Dynamic QR Code Generator</title>
+  <meta name="description" content="100% free, self-hosted dynamic QR code system with editable destination URLs, custom styles, scan analytics, and vector export options.">
+  <link rel="stylesheet" href="style.css">
+  <!-- qrcode-generator: Proper ISO-18004 QR matrix library with full RS error correction -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <!-- Chart.js CDN for Analytics Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+          </svg>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="brand-title">QR Track</span>
+            <span class="brand-badge">Self-Hosted</span>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-dim);">Dynamic QR Engine &amp; Analytics</p>
+        </div>
+      </a>
+
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-tab="generator">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Generator
+        </button>
+        <button class="nav-btn" data-tab="dashboard">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-btn" data-tab="analytics">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Analytics
+        </button>
+        <button class="nav-btn" data-tab="simulator">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Redirect Tester
+        </button>
+        <button class="nav-btn" data-tab="settings">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+          Data &amp; Backup
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main class="main-content">
+
+    <!-- PAGE 1: GENERATOR -->
+    <div id="page-generator" class="tab-page active">
+      <div class="generator-layout">
+
+        <!-- Controls Column -->
+        <div>
+          <!-- Type Selector Card -->
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                1. Select Content Type
+              </h2>
+            </div>
+            
+            <div class="type-grid">
+              <button class="type-btn active" data-type="url">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                Website URL
+              </button>
+              <button class="type-btn" data-type="wifi">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
+                Wi-Fi Network
+              </button>
+              <button class="type-btn" data-type="vcard">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5m-4 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-6 0h6"/></svg>
+                vCard Contact
+              </button>
+              <button class="type-btn" data-type="email">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Email
+              </button>
+              <button class="type-btn" data-type="sms">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                SMS Message
+              </button>
+              <button class="type-btn" data-type="text">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                Plain Text
+              </button>
+            </div>
+
+            <!-- Dynamic QR Toggle -->
+            <div class="dynamic-toggle-box">
+              <div class="dynamic-info">
+                <h4>
+                  <span style="color: var(--accent-cyan);">⚡ Dynamic QR Code</span>
+                  <span class="brand-badge">Editable Destination</span>
+                </h4>
+                <p>Stores a short code redirect link (`/q/:code`). Edit where it points anytime after printing!</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="dynamicToggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Content Inputs Form -->
+            <div id="contentFormContainer">
+              <!-- URL Input Form -->
+              <div class="form-group">
+                <label class="form-label" for="qrTitle">QR Code Title / Campaign Name</label>
+                <input type="text" id="qrTitle" class="form-control" placeholder="e.g. Summer Promo 2026" value="My Dynamic QR Link">
+              </div>
+              
+              <div class="form-group" id="urlInputGroup">
+                <label class="form-label" for="destinationUrl">Destination URL</label>
+                <input type="url" id="destinationUrl" class="form-control" placeholder="https://example.com/target-page" value="https://github.com/tuxxin/qr-track">
+              </div>
+
+              <!-- Additional Dynamic Form Fields inject here -->
+              <div id="dynamicFields"></div>
+            </div>
+          </div>
+
+          <!-- Styling & Customization Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                2. Design &amp; Customization
+              </h2>
+            </div>
+
+            <!-- Customizer Sub-tabs -->
+            <div class="customizer-tabs">
+              <button class="cust-tab-btn active" data-sec="colors">Colors &amp; Gradients</button>
+              <button class="cust-tab-btn" data-sec="patterns">Dots &amp; Body</button>
+              <button class="cust-tab-btn" data-sec="eyes">Eye Frames</button>
+              <button class="cust-tab-btn" data-sec="logo">Logo Overlay</button>
+              <button class="cust-tab-btn" data-sec="frame">Printable Frame</button>
+            </div>
+
+            <!-- Section 1: Colors -->
+            <div id="cust-sec-colors" class="cust-section active">
+              <div class="form-grid" style="margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Foreground Color</label>
+                  <div class="color-picker-group">
+                    <input type="color" id="colorDark" class="color-input" value="#4f46e5">
+                    <span id="colorDarkText" style="font-family: monospace; font-size: 0.85rem;">#4f46e5</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Background Color</label>
+                  <div class="color-picker-group">
+                    <input type="color" id="colorLight" class="color-input" value="#ffffff">
+                    <span id="colorLightText" style="font-family: monospace; font-size: 0.85rem;">#ffffff</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" style="display: flex; align-items: center; justify-content: space-between;">
+                  <span>Enable Gradient Fill</span>
+                  <label class="switch" style="width: 44px; height: 24px;">
+                    <input type="checkbox" id="gradientToggle" checked>
+                    <span class="slider"></span>
+                  </label>
+                </label>
+              </div>
+
+              <div class="form-group" id="gradientColorGroup">
+                <label class="form-label">Gradient End Color</label>
+                <div class="color-picker-group">
+                  <input type="color" id="gradientColor" class="color-input" value="#ec4899">
+                  <span id="gradientColorText" style="font-family: monospace; font-size: 0.85rem;">#ec4899</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Patterns -->
+            <div id="cust-sec-patterns" class="cust-section">
+              <label class="form-label">Select Body Pattern Style</label>
+              <div class="option-grid">
+                <div class="opt-card active" data-opt="bodyStyle" data-val="rounded">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 6px;"></div>
+                  Rounded
+                </div>
+                <div class="opt-card" data-opt="bodyStyle" data-val="square">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 0px;"></div>
+                  Square
+                </div>
+                <div class="opt-card" data-opt="bodyStyle" data-val="extra_rounded">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 50%;"></div>
+                  Circle Dots
+                </div>
+                <div class="opt-card" data-opt="bodyStyle" data-val="classy">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 35%;"></div>
+                  Classy
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Eyes -->
+            <div id="cust-sec-eyes" class="cust-section">
+              <label class="form-label">Outer Eye Frame Shape</label>
+              <div class="option-grid" style="margin-bottom: 1.2rem;">
+                <div class="opt-card active" data-opt="eyeStyle" data-val="rounded">
+                  <div class="opt-preview" style="border: 4px solid var(--primary); border-radius: 8px;"></div>
+                  Rounded
+                </div>
+                <div class="opt-card" data-opt="eyeStyle" data-val="square">
+                  <div class="opt-preview" style="border: 4px solid var(--primary); border-radius: 0px;"></div>
+                  Square
+                </div>
+                <div class="opt-card" data-opt="eyeStyle" data-val="circle">
+                  <div class="opt-preview" style="border: 4px solid var(--primary); border-radius: 50%;"></div>
+                  Circle
+                </div>
+              </div>
+
+              <label class="form-label">Center Eyeball Shape</label>
+              <div class="option-grid">
+                <div class="opt-card active" data-opt="eyeBallStyle" data-val="circle">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 50%; width: 18px; height: 18px;"></div>
+                  Circle
+                </div>
+                <div class="opt-card" data-opt="eyeBallStyle" data-val="square">
+                  <div class="opt-preview" style="background: var(--primary); border-radius: 0; width: 18px; height: 18px;"></div>
+                  Square
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: Logo -->
+            <div id="cust-sec-logo" class="cust-section">
+              <label class="form-label">Center Icon Preset</label>
+              <div class="option-grid" style="margin-bottom: 1rem;">
+                <div class="opt-card active" data-opt="logoIcon" data-val="web">
+                  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.93 6h-3.41a15.4 15.4 0 00-1.38-4.07A8.03 8.03 0 0118.93 8z"/></svg>
+                  Web
+                </div>
+                <div class="opt-card" data-opt="logoIcon" data-val="wifi">
+                  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9.4 2.02-12.57 5.28l2.12 2.12C4.1 7.85 7.8 6.2 12 6.2s7.9 1.65 10.45 4.2l2.12-2.12C21.4 5.02 16.97 3 12 3z"/></svg>
+                  Wi-Fi
+                </div>
+                <div class="opt-card" data-opt="logoIcon" data-val="star">
+                  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  Star
+                </div>
+                <div class="opt-card" data-opt="logoIcon" data-val="user">
+                  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>
+                  User
+                </div>
+                <div class="opt-card" data-opt="logoIcon" data-val="none">
+                  None
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Or Upload Custom Logo (PNG/JPG)</label>
+                <input type="file" id="logoUploadInput" accept="image/*" class="form-control">
+              </div>
+            </div>
+
+            <!-- Section 5: Frame -->
+            <div id="cust-sec-frame" class="cust-section">
+              <label class="form-label">Frame Template</label>
+              <div class="option-grid" style="margin-bottom: 1rem;">
+                <div class="opt-card active" data-opt="frameStyle" data-val="scan_me">
+                  Bottom Tag
+                </div>
+                <div class="opt-card" data-opt="frameStyle" data-val="wifi">
+                  Top Header
+                </div>
+                <div class="opt-card" data-opt="frameStyle" data-val="simple">
+                  Border Tag
+                </div>
+                <div class="opt-card" data-opt="frameStyle" data-val="none">
+                  No Frame
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="frameText">Frame Label Text</label>
+                <input type="text" id="frameText" class="form-control" value="SCAN ME">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Frame Background Color</label>
+                <div class="color-picker-group">
+                  <input type="color" id="frameColor" class="color-input" value="#4f46e5">
+                  <span id="frameColorText" style="font-family: monospace; font-size: 0.85rem;">#4f46e5</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sticky Live Preview Column -->
+        <div class="preview-sticky">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Live Preview</h2>
+              <span id="previewTypeBadge" class="brand-badge">Dynamic Link</span>
+            </div>
+
+            <div class="preview-box">
+              <div class="canvas-wrapper">
+                <canvas id="qrCanvas" class="qr-canvas"></canvas>
+              </div>
+            </div>
+
+            <div class="action-bar">
+              <button id="btnSaveQR" class="btn btn-success" style="width: 100%;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                Save &amp; Store QR Code
+              </button>
+
+              <div class="btn-group">
+                <button id="btnDownloadPNG" class="btn btn-primary">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  PNG
+                </button>
+                <button id="btnDownloadSVG" class="btn btn-secondary">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  SVG Vector
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- PAGE 2: DASHBOARD -->
+    <div id="page-dashboard" class="tab-page">
+      <!-- Metrics Overview Bar -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--primary);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          </div>
+          <div>
+            <div id="metricTotalQRs" class="metric-val">0</div>
+            <div class="metric-lbl">Total QR Codes</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+          <div>
+            <div id="metricTotalScans" class="metric-val">0</div>
+            <div class="metric-lbl">Total Scans Tracked</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div>
+            <div id="metricDynamicQRs" class="metric-val">0</div>
+            <div class="metric-lbl">Active Dynamic QRs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Management Toolbar -->
+      <div class="card">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="dashSearch" class="form-control" placeholder="Search QR title, short code or URL...">
+          </div>
+
+          <div style="display: flex; gap: 0.75rem;">
+            <select id="dashTypeFilter" class="form-control" style="width: auto;">
+              <option value="all">All Content Types</option>
+              <option value="url">URL</option>
+              <option value="wifi">Wi-Fi</option>
+              <option value="vcard">vCard</option>
+            </select>
+            <button id="btnNewQR" class="btn btn-primary btn-sm">
+              + Create New QR
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Items Grid -->
+        <div id="qrGridContainer" class="qr-grid-view">
+          <!-- Dynamic Cards render here -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 3: ANALYTICS -->
+    <div id="page-analytics" class="tab-page">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <h2 class="card-title">Scan Activity Overview</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="scanTrendsChart"></canvas>
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-bottom: 1.5rem;">
+        <div class="card">
+          <div class="card-header"><h3 class="card-title">Device Breakdown</h3></div>
+          <div class="chart-container">
+            <canvas id="deviceChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3 class="card-title">Browser Share</h3></div>
+          <div class="chart-container">
+            <canvas id="browserChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Trail Table -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Recent Scan Audit Trail</h2>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-dim);">
+                <th style="padding: 0.75rem 1rem;">Timestamp</th>
+                <th style="padding: 0.75rem 1rem;">Short Code</th>
+                <th style="padding: 0.75rem 1rem;">Device</th>
+                <th style="padding: 0.75rem 1rem;">Browser</th>
+                <th style="padding: 0.75rem 1rem;">Client IP</th>
+              </tr>
+            </thead>
+            <tbody id="scanAuditTableBody">
+              <!-- Logs render here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 4: REDIRECT SIMULATOR -->
+    <div id="page-simulator" class="tab-page">
+      <div class="card" style="max-width: 680px; margin: 0 auto;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            Interactive QR Scan &amp; Redirect Simulator
+          </h2>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+          Test how someone's mobile camera behaves when scanning a dynamic QR code (`/q/:shortCode`). 
+          Scanning records real scan analytics in your database and routes to the current destination URL!
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="simShortCode">Select or Enter Short Code to Test</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="simShortCode" class="form-control" placeholder="e.g. web888" value="web888">
+            <button id="btnSimulateScan" class="btn btn-primary">Simulate Scan</button>
+          </div>
+        </div>
+
+        <div id="simResultBox" style="display: none; margin-top: 1.5rem; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <!-- Redirect simulation output renders here -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 5: SETTINGS & BACKUP -->
+    <div id="page-settings" class="tab-page">
+      <div class="card" style="max-width: 720px; margin: 0 auto;">
+        <div class="card-header">
+          <h2 class="card-title">Self-Hosted Data Ownership &amp; Backup</h2>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          You own 100% of your QR data, short links, and scan analytics. No monthly subscription, no third-party tracking.
+          Export your database anytime or restore from a JSON file.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-md); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem;">Export Complete Database</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">Download a JSON file containing all QR codes, options, and scan logs.</p>
+            </div>
+            <button id="btnExportJSON" class="btn btn-primary btn-sm">Export JSON</button>
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem;">Import Database Backup</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">Restore or merge QR codes from a saved JSON file.</p>
+            </div>
+            <input type="file" id="importJSONInput" accept=".json" style="display: none;">
+            <button id="btnImportJSON" class="btn btn-secondary btn-sm">Import JSON</button>
+          </div>
+
+          <div style="background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-md); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent-rose); margin-bottom: 0.2rem;">Reset to Demo Seed Data</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">Clears local storage and re-populates with default demo QRs.</p>
+            </div>
+            <button id="btnResetSeed" class="btn btn-danger btn-sm">Reset Seed Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Edit Modal (dynamic: vCard fields OR URL input) -->
+  <div id="editUrlModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 id="editModalTitle" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">✏️ Edit Profile</h3>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+        The printed QR code image &amp; URL <strong style="color: var(--accent-green);">never changes</strong> — only the data behind it updates instantly.
+      </p>
+
+      <input type="hidden" id="editQrId">
+
+      <!-- Dynamic body injected by JS based on QR type -->
+      <div id="editModalBody"></div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+        <button id="btnCancelEdit" class="btn btn-secondary btn-sm">Cancel</button>
+        <button id="btnSaveEditUrl" class="btn btn-success btn-sm">✅ Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="storage.js"></script>
+  <script src="qrEngine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

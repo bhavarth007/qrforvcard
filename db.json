@@ -1,0 +1,87 @@
+{
+  "qrcodes": [
+    {
+      "id": "qr-seed-1",
+      "title": "Main Company Website",
+      "type": "url",
+      "isDynamic": true,
+      "shortCode": "web888",
+      "destinationUrl": "https://github.com/tuxxin/qr-track",
+      "active": true,
+      "createdAt": "2026-08-04T22:25:37.412182",
+      "updatedAt": "2026-08-04T22:25:37.412182",
+      "options": {
+        "colorDark": "#4f46e5",
+        "colorLight": "#ffffff",
+        "gradient": true,
+        "gradientColor": "#ec4899",
+        "bodyStyle": "rounded",
+        "eyeStyle": "rounded",
+        "eyeBallStyle": "circle",
+        "logoIcon": "web",
+        "frameStyle": "scan_me",
+        "frameText": "SCAN WEBSITE",
+        "frameColor": "#4f46e5"
+      }
+    },
+    {
+      "id": "qr-seed-2",
+      "title": "Office WiFi Network",
+      "type": "wifi",
+      "isDynamic": false,
+      "shortCode": "wifi01",
+      "destinationUrl": "WIFI:S:Guest_HQ;T:WPA;P:SecretPass2026;;",
+      "active": true,
+      "createdAt": "2026-08-04T22:25:37.412182",
+      "updatedAt": "2026-08-04T22:25:37.412182",
+      "options": {
+        "colorDark": "#0f172a",
+        "colorLight": "#ffffff",
+        "gradient": false,
+        "bodyStyle": "square",
+        "eyeStyle": "square",
+        "eyeBallStyle": "square",
+        "logoIcon": "wifi",
+        "frameStyle": "wifi",
+        "frameText": "CONNECT TO WI-FI",
+        "frameColor": "#06b6d4"
+      }
+    },
+    {
+      "id": "qr-seed-3",
+      "title": "Summer Discount Promo",
+      "type": "url",
+      "isDynamic": true,
+      "shortCode": "sale26",
+      "destinationUrl": "https://qr-track.tuxxin.com",
+      "active": true,
+      "createdAt": "2026-08-04T22:25:37.412182",
+      "updatedAt": "2026-08-04T22:25:37.412182",
+      "options": {
+        "colorDark": "#059669",
+        "colorLight": "#ffffff",
+        "gradient": true,
+        "gradientColor": "#10b981",
+        "bodyStyle": "extra_rounded",
+        "eyeStyle": "circle",
+        "eyeBallStyle": "circle",
+        "logoIcon": "star",
+        "frameStyle": "simple",
+        "frameText": "GET PROMO CODE",
+        "frameColor": "#10b981"
+      }
+    }
+  ],
+  "analytics": [
+    {
+      "id": "scan-1785862560207",
+      "qrId": "qr-seed-1",
+      "shortCode": "web888",
+      "timestamp": "2026-08-04T22:26:00.207370",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    }
+  ]
+}

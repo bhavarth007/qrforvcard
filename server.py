@@ -1,0 +1,511 @@
+"""
+Self-Hosted Dynamic QR Code Backend & Redirect Engine
+Handles real-time HTTP 307 redirects for URLs, and renders Mobile Digital Business Card Profile Pages for vCard QRs!
+"""
+
+import json
+import os
+import re
+import time
+from datetime import datetime
+from typing import Optional, List, Dict, Any
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+app = FastAPI(title="QR Track - Dynamic Redirect & Profile Engine", version="1.0.0")
+
+DB_FILE = os.path.join(os.path.dirname(__file__), "db.json")
+
+DEFAULT_DB = {
+    "qrcodes": [
+        {
+            "id": "qr-seed-1",
+            "title": "Alex Morgan - Digital Business Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "vcard01",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;Alex Morgan;;;\r\nFN:Alex Morgan\r\nORG:Acme Technologies Inc.\r\nTITLE:Senior Lead Developer\r\nTEL;TYPE=CELL:+1 (555) 234-5678\r\nEMAIL:alex.morgan@acmetech.com\r\nEND:VCARD",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
+            }
+        },
+        {
+            "id": "qr-seed-2",
+            "title": "Main Company Website",
+            "type": "url",
+            "isDynamic": True,
+            "shortCode": "web888",
+            "destinationUrl": "https://github.com/tuxxin/qr-track",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "web",
+                "frameStyle": "scan_me",
+                "frameText": "SCAN WEBSITE",
+                "frameColor": "#4f46e5"
+            }
+        }
+    ],
+    "analytics": []
+}
+
+def load_db() -> Dict[str, Any]:
+    if not os.path.exists(DB_FILE):
+        with open(DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_DB, f, indent=2)
+        return DEFAULT_DB
+    try:
+        with open(DB_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return DEFAULT_DB
+
+def save_db(db_data: Dict[str, Any]):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump(db_data, f, indent=2)
+
+def parse_user_agent(ua_str: str) -> tuple[str, str]:
+    device = "Desktop"
+    if "Android" in ua_str:
+        device = "Mobile (Android)"
+    elif "iPhone" in ua_str or "iPad" in ua_str:
+        device = "Mobile (iOS)"
+    elif "Macintosh" in ua_str:
+        device = "Desktop (macOS)"
+    elif "Windows" in ua_str:
+        device = "Desktop (Windows)"
+
+    browser = "Chrome"
+    if "Edg" in ua_str:
+        browser = "Edge"
+    elif "Firefox" in ua_str:
+        browser = "Firefox"
+    elif "Safari" in ua_str and "Chrome" not in ua_str:
+        browser = "Safari"
+
+    return device, browser
+
+# Helper to parse raw vCard payload into key-values
+def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
+    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": ""}
+    
+    fn_match = re.search(r'FN:(.*)', raw_vcard, re.IGNORECASE)
+    if fn_match:
+        info["fn"] = fn_match.group(1).strip()
+    else:
+        n_match = re.search(r'N:;?([^;\r\n]+)', raw_vcard, re.IGNORECASE)
+        if n_match:
+            info["fn"] = n_match.group(1).replace(';', ' ').strip()
+
+    org_match = re.search(r'ORG:(.*)', raw_vcard, re.IGNORECASE)
+    if org_match:
+        info["org"] = org_match.group(1).strip()
+
+    title_match = re.search(r'TITLE:(.*)', raw_vcard, re.IGNORECASE)
+    if title_match:
+        info["title"] = title_match.group(1).strip()
+
+    phone_match = re.search(r'TEL[^:]*:(.*)', raw_vcard, re.IGNORECASE)
+    if phone_match:
+        info["phone"] = phone_match.group(1).strip()
+
+    email_match = re.search(r'EMAIL[^:]*:(.*)', raw_vcard, re.IGNORECASE)
+    if email_match:
+        info["email"] = email_match.group(1).strip()
+
+    return info
+
+
+# --- DYNAMIC SHORT-CODE ROUTER ---
+@app.get("/q/{short_code}")
+async def dynamic_redirect(short_code: str, request: Request):
+    db = load_db()
+    qr = next((q for q in db.get("qrcodes", []) if q.get("shortCode") == short_code), None)
+
+    if not qr:
+        return HTMLResponse(
+            status_code=404,
+            content="""
+            <!DOCTYPE html>
+            <html>
+                <head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>404 Not Found</title></head>
+                <body style="background:#090d16; color:#fff; font-family:sans-serif; text-align:center; padding:50px 20px;">
+                    <h1 style="color:#f43f5e">404 - QR Code Not Found</h1>
+                    <p style="color:#94a3b8">Short link /q/""" + short_code + """ is invalid or removed.</p>
+                </body>
+            </html>
+            """
+        )
+
+    if not qr.get("active", True):
+        return HTMLResponse(
+            status_code=403,
+            content="""
+            <!DOCTYPE html>
+            <html>
+                <head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Link Paused</title></head>
+                <body style="background:#090d16; color:#fff; font-family:sans-serif; text-align:center; padding:50px 20px;">
+                    <h1 style="color:#f59e0b">⚠️ Link Paused / Expired</h1>
+                    <p style="color:#94a3b8">The owner of this dynamic QR code has temporarily disabled this link.</p>
+                </body>
+            </html>
+            """
+        )
+
+    # Record Scan Analytics
+    ua = request.headers.get("user-agent", "")
+    device, browser = parse_user_agent(ua)
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
+    scan_log = {
+        "id": f"scan-{int(time.time()*1000)}",
+        "qrId": qr["id"],
+        "shortCode": short_code,
+        "timestamp": datetime.now().isoformat(),
+        "device": device,
+        "browser": browser,
+        "ip": client_ip,
+        "country": "Local Server"
+    }
+
+    db.setdefault("analytics", []).insert(0, scan_log)
+    save_db(db)
+
+    qr_type = qr.get("type", "url")
+    destination_url = qr.get("destinationUrl", "")
+
+    # 1. Handle Web URL Redirect
+    if qr_type == "url" or destination_url.startswith("http://") or destination_url.startswith("https://"):
+        target_url = destination_url
+        if not target_url.startswith("http://") and not target_url.startswith("https://"):
+            target_url = "https://" + target_url
+        return RedirectResponse(url=target_url, status_code=307)
+
+    # 2. Handle vCard Mobile User Profile Page
+    if qr_type == "vcard" or "VCARD" in destination_url.upper():
+        profile = parse_vcard_data(destination_url)
+        initials = "".join([part[0].upper() for part in profile["fn"].split()[:2]]) or "U"
+        
+        # Escape vcard content for download
+        vcard_encoded = destination_url.replace("\r\n", "\\n").replace("\n", "\\n").replace('"', '&quot;')
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>{profile['fn']} - Digital Profile</title>
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+            <style>
+                * {{ margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }}
+                body {{
+                    background: #090d16;
+                    color: #f8fafc;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 1.5rem 1rem;
+                    background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+                }}
+                .profile-card {{
+                    background: rgba(18, 24, 39, 0.85);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 28px;
+                    width: 100%;
+                    max-width: 420px;
+                    padding: 2.25rem 1.75rem;
+                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+                    text-align: center;
+                    animation: slideUp 0.4s ease-out;
+                }}
+                @keyframes slideUp {{
+                    from {{ opacity: 0; transform: translateY(20px); }}
+                    to {{ opacity: 1; transform: translateY(0); }}
+                }}
+                .avatar-box {{
+                    width: 96px;
+                    height: 96px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #6366f1, #ec4899);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 1.25rem auto;
+                    font-size: 2.2rem;
+                    font-weight: 800;
+                    color: #ffffff;
+                    box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+                    border: 3px solid rgba(255, 255, 255, 0.2);
+                }}
+                .profile-name {{
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    margin-bottom: 0.25rem;
+                }}
+                .profile-org {{
+                    font-size: 0.92rem;
+                    color: #94a3b8;
+                    margin-bottom: 1.75rem;
+                    font-weight: 500;
+                }}
+                .info-list {{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.85rem;
+                    margin-bottom: 1.75rem;
+                    text-align: left;
+                }}
+                .info-item {{
+                    background: rgba(15, 23, 42, 0.7);
+                    border: 1px solid rgba(255, 255, 255, 0.06);
+                    border-radius: 14px;
+                    padding: 0.85rem 1.1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.85rem;
+                    color: #f8fafc;
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                }}
+                .info-item:hover {{
+                    border-color: rgba(99, 102, 241, 0.4);
+                    background: rgba(99, 102, 241, 0.1);
+                }}
+                .info-icon {{
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    background: rgba(99, 102, 241, 0.15);
+                    color: #6366f1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    font-size: 1.1rem;
+                }}
+                .info-label {{
+                    font-size: 0.75rem;
+                    color: #64748b;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }}
+                .info-value {{
+                    font-size: 0.92rem;
+                    font-weight: 600;
+                    word-break: break-all;
+                }}
+                .btn-save {{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.6rem;
+                    width: 100%;
+                    padding: 0.95rem 1.5rem;
+                    background: linear-gradient(135deg, #6366f1, #4f46e5);
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 16px;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+                    transition: transform 0.2s, box-shadow 0.2s;
+                }}
+                .btn-save:hover {{
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+                }}
+            </style>
+        </head>
+        <body>
+
+            <div class="profile-card">
+                <div class="avatar-box">{initials}</div>
+                <h1 class="profile-name">{profile['fn']}</h1>
+                <p class="profile-org">{profile['title']} {f"• {profile['org']}" if profile['org'] else ""}</p>
+
+                <div class="info-list">
+                    {f'''
+                    <a href="tel:{profile['phone']}" class="info-item">
+                        <div class="info-icon">📞</div>
+                        <div>
+                            <div class="info-label">Mobile Phone</div>
+                            <div class="info-value">{profile['phone']}</div>
+                        </div>
+                    </a>
+                    ''' if profile['phone'] else ''}
+
+                    {f'''
+                    <a href="mailto:{profile['email']}" class="info-item">
+                        <div class="info-icon">✉️</div>
+                        <div>
+                            <div class="info-label">Email Address</div>
+                            <div class="info-value">{profile['email']}</div>
+                        </div>
+                    </a>
+                    ''' if profile['email'] else ''}
+
+                    {f'''
+                    <div class="info-item">
+                        <div class="info-icon">🏢</div>
+                        <div>
+                            <div class="info-label">Organization</div>
+                            <div class="info-value">{profile['org']}</div>
+                        </div>
+                    </div>
+                    ''' if profile['org'] else ''}
+                </div>
+
+                <button class="btn-save" id="btnDownloadVCF">
+                    📥 Add Contact to Phone
+                </button>
+            </div>
+
+            <script>
+                document.getElementById('btnDownloadVCF').addEventListener('click', function() {{
+                    var vcardData = "{vcard_encoded}".replace(/\\\\n/g, "\\r\\n");
+                    var blob = new Blob([vcardData], {{ type: "text/vcard;charset=utf-8;" }});
+                    var url = URL.createObjectURL(blob);
+                    var link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', "{profile['fn'].lower().replace(' ', '_')}.vcf");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }});
+            </script>
+        </body>
+        </html>
+        """
+        return HTMLResponse(content=html_content, status_code=200)
+
+    # 3. Fallback for Wi-Fi, Text, etc.
+    return HTMLResponse(
+        content=f"""
+        <!DOCTYPE html>
+        <html>
+        <head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{qr['title']}</title></head>
+        <body style="background:#090d16; color:#fff; font-family:sans-serif; text-align:center; padding:50px 20px;">
+            <h2>{qr['title']}</h2>
+            <div style="background:#121827; border:1px solid #1f2937; padding:20px; border-radius:12px; margin-top:20px; word-break:break-all;">
+                <code>{destination_url}</code>
+            </div>
+        </body>
+        </html>
+        """,
+        status_code=200
+    )
+
+
+# --- REST API ENDPOINTS ---
+@app.get("/api/qrcodes")
+async def get_qrcodes():
+    db = load_db()
+    return db.get("qrcodes", [])
+
+class QRCodeSchema(BaseModel):
+    id: Optional[str] = None
+    title: str
+    type: str
+    isDynamic: bool = True
+    shortCode: Optional[str] = None
+    destinationUrl: str
+    active: bool = True
+    options: Dict[str, Any] = {}
+
+@app.post("/api/qrcodes")
+async def save_qrcode(qr_input: QRCodeSchema):
+    db = load_db()
+    qrs = db.get("qrcodes", [])
+    
+    qr_dict = qr_input.model_dump()
+    if not qr_dict.get("id"):
+        qr_dict["id"] = f"qr-{int(time.time()*1000)}"
+    if not qr_dict.get("shortCode"):
+        import random, string
+        qr_dict["shortCode"] = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+    
+    qr_dict["createdAt"] = datetime.now().isoformat()
+    qr_dict["updatedAt"] = datetime.now().isoformat()
+
+    existing_idx = next((i for i, q in enumerate(qrs) if q["id"] == qr_dict["id"]), -1)
+    if existing_idx >= 0:
+        qrs[existing_idx] = qr_dict
+    else:
+        qrs.insert(0, qr_dict)
+
+    db["qrcodes"] = qrs
+    save_db(db)
+    return qr_dict
+
+@app.put("/api/qrcodes/{qr_id}/destination")
+async def update_destination(qr_id: str, payload: Dict[str, str]):
+    new_url = payload.get("destinationUrl")
+    if not new_url:
+        raise HTTPException(status_code=400, detail="Missing destinationUrl")
+
+    db = load_db()
+    qr = next((q for q in db.get("qrcodes", []) if q["id"] == qr_id), None)
+    if not qr:
+        raise HTTPException(status_code=404, detail="QR Code not found")
+
+    qr["destinationUrl"] = new_url
+    qr["updatedAt"] = datetime.now().isoformat()
+    save_db(db)
+    return {"status": "success", "newDestination": new_url}
+
+@app.delete("/api/qrcodes/{qr_id}")
+async def delete_qrcode(qr_id: str):
+    db = load_db()
+    db["qrcodes"] = [q for q in db.get("qrcodes", []) if q["id"] != qr_id]
+    db["analytics"] = [a for a in db.get("analytics", []) if a.get("qrId") != qr_id]
+    save_db(db)
+    return {"status": "deleted"}
+
+@app.get("/api/analytics")
+async def get_analytics():
+    db = load_db()
+    return db.get("analytics", [])
+
+# Serve Frontend Web App
+@app.get("/")
+async def serve_index():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "index.html"))
+
+app.mount("/", StaticFiles(directory=os.path.dirname(__file__)), name="static")
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    # Bind to 0.0.0.0 so the app is reachable from mobile on the same Wi-Fi network
+    # and also works correctly on cloud platforms (Railway, Render, Fly.io)
+    uvicorn.run(app, host="0.0.0.0", port=port)
+

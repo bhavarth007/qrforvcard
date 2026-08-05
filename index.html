@@ -65,40 +65,12 @@
 
         <!-- Controls Column -->
         <div>
-          <!-- Type Selector Card -->
           <div class="card" style="margin-bottom: 1.5rem;">
             <div class="card-header">
               <h2 class="card-title">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-                1. Select Content Type
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5m-4 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-6 0h6"/></svg>
+                1. vCard Contact Details
               </h2>
-            </div>
-            
-            <div class="type-grid">
-              <button class="type-btn active" data-type="url">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                Website URL
-              </button>
-              <button class="type-btn" data-type="wifi">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg>
-                Wi-Fi Network
-              </button>
-              <button class="type-btn" data-type="vcard">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5m-4 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-6 0h6"/></svg>
-                vCard Contact
-              </button>
-              <button class="type-btn" data-type="email">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                Email
-              </button>
-              <button class="type-btn" data-type="sms">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                SMS Message
-              </button>
-              <button class="type-btn" data-type="text">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
-                Plain Text
-              </button>
             </div>
 
             <!-- Dynamic QR Toggle -->
@@ -124,7 +96,7 @@
                 <input type="text" id="qrTitle" class="form-control" placeholder="e.g. Summer Promo 2026" value="My Dynamic QR Link">
               </div>
               
-              <div class="form-group" id="urlInputGroup">
+              <div class="form-group" id="urlInputGroup" style="display:none;">
                 <label class="form-label" for="destinationUrl">Destination URL</label>
                 <input type="url" id="destinationUrl" class="form-control" placeholder="https://example.com/target-page" value="https://github.com/tuxxin/qr-track">
               </div>
@@ -392,11 +364,9 @@
           </div>
 
           <div style="display: flex; gap: 0.75rem;">
-            <select id="dashTypeFilter" class="form-control" style="width: auto;">
+            <select id="dashTypeFilter" class="form-control" style="display:none;">
               <option value="all">All Content Types</option>
-              <option value="url">URL</option>
-              <option value="wifi">Wi-Fi</option>
-              <option value="vcard">vCard</option>
+              <option value="vcard" selected>vCard</option>
             </select>
             <button id="btnNewQR" class="btn btn-primary btn-sm">
               + Create New QR

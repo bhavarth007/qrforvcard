@@ -22,11 +22,11 @@ DEFAULT_DB = {
     "qrcodes": [
         {
             "id": "qr-seed-1",
-            "title": "Alex Morgan - Digital Business Card",
+            "title": "GHANSHYAM DOBARIYA - Digital Business Card",
             "type": "vcard",
             "isDynamic": True,
-            "shortCode": "vcard01",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;Alex Morgan;;;\r\nFN:Alex Morgan\r\nORG:Acme Technologies Inc.\r\nTITLE:Senior Lead Developer\r\nTEL;TYPE=CELL:+1 (555) 234-5678\r\nEMAIL:alex.morgan@acmetech.com\r\nEND:VCARD",
+            "shortCode": "ghanshyam",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;\;\r\nEND:VCARD",
             "active": True,
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
@@ -46,11 +46,11 @@ DEFAULT_DB = {
         },
         {
             "id": "qr-seed-2",
-            "title": "Main Company Website",
-            "type": "url",
+            "title": "SHAILESH DHOLARIYA - Digital Business Card",
+            "type": "vcard",
             "isDynamic": True,
-            "shortCode": "web888",
-            "destinationUrl": "https://github.com/tuxxin/qr-track",
+            "shortCode": "shailesh",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;SHAILESH DHOLARIYA;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:9925933568\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;\;\r\nEND:VCARD",
             "active": True,
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
@@ -62,9 +62,105 @@ DEFAULT_DB = {
                 "bodyStyle": "rounded",
                 "eyeStyle": "rounded",
                 "eyeBallStyle": "circle",
-                "logoIcon": "web",
+                "logoIcon": "user",
                 "frameStyle": "scan_me",
-                "frameText": "SCAN WEBSITE",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
+            }
+        },
+        {
+            "id": "qr-seed-3",
+            "title": "MILAN HIDAD - Digital Business Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "milan",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;MILAN HIDAD;;;\r\nFN:MILAN HIDAD\r\nORG:\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:6355979500\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;\;\r\nEND:VCARD",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
+            }
+        },
+        {
+            "id": "qr-seed-4",
+            "title": "DINESH BHUVA - Digital Business Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "dinesh",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;DINESH BHUVA;;;\r\nFN:DINESH BHUVA\r\nORG:\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:9299999995\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C-127, ROAD NO. 20, NEAR M R CIRCLE ,SAYKHA GIDC,VAGRA,BHARUCH, GUJARAT-392140;;;\;\r\nEND:VCARD",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
+            }
+        },
+        {
+            "id": "qr-seed-5",
+            "title": "M S YADAV - Digital Business Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "myadav",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;M S YADAV;;;\r\nFN:M S YADAV\r\nORG:\r\nTITLE:C.E.O.\r\nTEL;TYPE=CELL:9313509726\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. A1/8, ROAD NO. 9, HOJIWALA IND. ESTATE,SACHIN,SURAT, GUJARAT-394230;;;\;\r\nEND:VCARD",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
+            }
+        },
+        {
+            "id": "qr-seed-6",
+            "title": "B S CHOUHAN - Digital Business Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "bchouhan",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;B S CHOUHAN;;;\r\nFN:B S CHOUHAN\r\nORG:\r\nTITLE:SR. SALES MANAGER\r\nTEL;TYPE=CELL:9727564411\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;\;\r\nADR;TYPE=HOME:;;PLOT NO. A1/8, ROAD NO. 9, HOJIWALA IND. ESTATE,SACHIN,SURAT, GUJARAT-394230;;;\;\r\nEND:VCARD",
+            "active": True,
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt": datetime.now().isoformat(),
+            "options": {
+                "colorDark": "#4f46e5",
+                "colorLight": "#ffffff",
+                "gradient": True,
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
                 "frameColor": "#4f46e5"
             }
         }
@@ -110,7 +206,7 @@ def parse_user_agent(ua_str: str) -> tuple[str, str]:
 
 # Helper to parse raw vCard payload into key-values
 def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
-    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": ""}
+    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": "", "addr1": "", "addr2": "", "wa": "", "fb": "", "cat": ""}
     
     fn_match = re.search(r'FN:(.*)', raw_vcard, re.IGNORECASE)
     if fn_match:
@@ -135,6 +231,32 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
     email_match = re.search(r'EMAIL[^:]*:(.*)', raw_vcard, re.IGNORECASE)
     if email_match:
         info["email"] = email_match.group(1).strip()
+        
+    addr_work = re.search(r'ADR;TYPE=WORK:;;(.*);;;;', raw_vcard, re.IGNORECASE)
+    if addr_work:
+        info["addr1"] = addr_work.group(1).strip()
+        
+    addr_home = re.search(r'ADR;TYPE=HOME:;;(.*);;;;', raw_vcard, re.IGNORECASE)
+    if addr_home:
+        info["addr2"] = addr_home.group(1).strip()
+        
+    wa = re.search(r'URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
+    if wa:
+        info["wa"] = wa.group(1).strip()
+        
+    fb = re.search(r'URL;TYPE=Facebook:(.*)', raw_vcard, re.IGNORECASE)
+    if fb:
+        info["fb"] = fb.group(1).strip()
+        
+    cat = re.search(r'URL;TYPE=Catalog:(.*)', raw_vcard, re.IGNORECASE)
+    if cat:
+        info["cat"] = cat.group(1).strip()
+        
+    photo = re.search(r'URL;TYPE=Photo:(.*)', raw_vcard, re.IGNORECASE)
+    if photo:
+        info["photo"] = photo.group(1).strip()
+    else:
+        info["photo"] = ""
 
     return info
 
@@ -259,6 +381,16 @@ async def dynamic_redirect(short_code: str, request: Request):
     # 2. Handle vCard Mobile User Profile Page
     if qr_type == "vcard" or "VCARD" in destination_url.upper():
         profile = parse_vcard_data(destination_url)
+        
+        # Apply B.S. CHOUHAN Name Formatting Rule (Add dots after single characters)
+        formatted_parts = []
+        for part in profile["fn"].split():
+            if len(part) == 1 and part.isalpha():
+                formatted_parts.append(part + ".")
+            else:
+                formatted_parts.append(part)
+        profile["fn"] = " ".join(formatted_parts)
+        
         initials = "".join([part[0].upper() for part in profile["fn"].split()[:2]]) or "U"
         
         # Escape vcard content for download
@@ -400,7 +532,7 @@ async def dynamic_redirect(short_code: str, request: Request):
         <body>
 
             <div class="profile-card">
-                <div class="avatar-box">{initials}</div>
+                {f'''<img src="{profile['photo']}" alt="{profile['fn']}" class="avatar-box" style="object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);">''' if profile['photo'] else f'''<div class="avatar-box">{initials}</div>'''}
                 <h1 class="profile-name">{profile['fn']}</h1>
                 <p class="profile-org">{profile['title']} {f"• {profile['org']}" if profile['org'] else ""}</p>
 
@@ -434,6 +566,64 @@ async def dynamic_redirect(short_code: str, request: Request):
                         </div>
                     </div>
                     ''' if profile['org'] else ''}
+                    
+                    {f'''
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div>
+                            <div class="info-label">Corporate Office</div>
+                            <div class="info-value">{profile['addr1']}</div>
+                        </div>
+                    </div>
+                    ''' if profile['addr1'] and profile['addr2'] else (f'''
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div>
+                            <div class="info-label">Address</div>
+                            <div class="info-value">{profile['addr1']}</div>
+                        </div>
+                    </div>
+                    ''' if profile['addr1'] else '')}
+
+                    {f'''
+                    <div class="info-item">
+                        <div class="info-icon">🏭</div>
+                        <div>
+                            <div class="info-label">Factory Location</div>
+                            <div class="info-value">{profile['addr2']}</div>
+                        </div>
+                    </div>
+                    ''' if profile['addr2'] else ''}
+
+                    {f'''
+                    <a href="{profile['wa']}" target="_blank" class="info-item">
+                        <div class="info-icon" style="color:#25D366; background:rgba(37,211,102,0.15);">💬</div>
+                        <div>
+                            <div class="info-label">WhatsApp</div>
+                            <div class="info-value">Chat on WhatsApp</div>
+                        </div>
+                    </a>
+                    ''' if profile['wa'] else ''}
+
+                    {f'''
+                    <a href="{profile['fb']}" target="_blank" class="info-item">
+                        <div class="info-icon" style="color:#1877F2; background:rgba(24,119,242,0.15);">🌐</div>
+                        <div>
+                            <div class="info-label">Facebook</div>
+                            <div class="info-value">Visit Profile</div>
+                        </div>
+                    </a>
+                    ''' if profile['fb'] else ''}
+
+                    {f'''
+                    <a href="{profile['cat']}" target="_blank" class="info-item">
+                        <div class="info-icon" style="color:#f59e0b; background:rgba(245,158,11,0.15);">📑</div>
+                        <div>
+                            <div class="info-label">Catalog</div>
+                            <div class="info-value">View Products / Catalog</div>
+                        </div>
+                    </a>
+                    ''' if profile['cat'] else ''}
                 </div>
 
                 <button class="btn-save" id="btnDownloadVCF">

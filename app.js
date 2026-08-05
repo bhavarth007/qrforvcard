@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // State
-  let currentType = 'url';
+  let currentType = 'vcard';
   let isDynamic = true;
   let customLogoDataUrl = null;
 
@@ -83,20 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 2. TYPE SELECTOR & DYNAMIC FORM FIELDS ---
+  // --- 2. DYNAMIC TOGGLE & FORM FIELDS ---
   function initTypeSelector() {
-    const typeBtns = document.querySelectorAll('.type-grid .type-btn');
-    typeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        typeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentType = btn.getAttribute('data-type');
-        resetSaveSession();  // new type = fresh session
-        renderDynamicFormFields();
-        updateLivePreview();
-      });
-    });
-
     const dynamicToggle = document.getElementById('dynamicToggle');
     dynamicToggle.addEventListener('change', (e) => {
       isDynamic = e.target.checked;
@@ -116,31 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = '';
     urlInputGroup.style.display = 'block';
 
-    if (currentType === 'wifi') {
-      urlInputGroup.style.display = 'none';
-      container.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">Network Name (SSID)</label>
-          <input type="text" id="wifiSsid" class="form-control" value="Office_Guest_HQ">
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Wi-Fi Password</label>
-            <input type="text" id="wifiPass" class="form-control" value="SecretPass2026">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Encryption Type</label>
-            <select id="wifiEnc" class="form-control">
-              <option value="WPA">WPA / WPA2 / WPA3</option>
-              <option value="WEP">WEP</option>
-              <option value="nopass">Open (No Password)</option>
-            </select>
-          </div>
-        </div>
-      `;
-    } else if (currentType === 'vcard') {
-      urlInputGroup.style.display = 'none';
-      container.innerHTML = `
+    container.innerHTML = `
         <div style="background: linear-gradient(135deg, rgba(79,70,229,0.12), rgba(236,72,153,0.08)); border: 1px solid rgba(79,70,229,0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; display:flex; align-items:center; gap:10px;">
           <span style="font-size:1.4rem;">📱</span>
           <div>
@@ -158,9 +122,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="text" id="vTitle" class="form-control" placeholder="e.g. Product Manager" value="Product Manager">
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Company / Organization</label>
-          <input type="text" id="vOrg" class="form-control" placeholder="e.g. Acme Technologies" value="Acme Technologies">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Profile Photo (Cloudinary)</label>
+            <input type="file" id="vPhotoUpload" class="form-control" accept="image/*">
+            <input type="hidden" id="vPhotoUrl" value="">
+            <small id="uploadStatus" style="color: var(--text-muted); font-size: 0.75rem;">Select an image to upload</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company / Organization</label>
+            <input type="text" id="vOrg" class="form-control" placeholder="e.g. Acme Technologies" value="Acme Technologies">
+          </div>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -172,50 +144,75 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="email" id="vEmail" class="form-control" placeholder="alex@acmetech.com" value="alex@acmetech.com">
           </div>
         </div>
-      `;
-
-    } else if (currentType === 'email') {
-      urlInputGroup.style.display = 'none';
-      container.innerHTML = `
         <div class="form-group">
-          <label class="form-label">Recipient Email</label>
-          <input type="email" id="emailTo" class="form-control" value="contact@mybrand.com">
+          <label class="form-label">Corporate Office Address</label>
+          <input type="text" id="vAddr1" class="form-control" placeholder="e.g. Plot No. 123, Road 4, City" value="">
         </div>
         <div class="form-group">
-          <label class="form-label">Subject Line</label>
-          <input type="text" id="emailSub" class="form-control" value="Inquiry regarding services">
+          <label class="form-label">Factory Address (Optional)</label>
+          <input type="text" id="vAddr2" class="form-control" placeholder="e.g. Plot No. 456, Road 9, City" value="">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">WhatsApp Number</label>
+            <input type="tel" id="vWhatsapp" class="form-control" placeholder="+1234567890" value="">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Facebook URL</label>
+            <input type="url" id="vFacebook" class="form-control" placeholder="https://facebook.com/..." value="">
+          </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Message Body</label>
-          <textarea id="emailBody" class="form-control" rows="3">Hello team, I would like to schedule a product demo.</textarea>
-        </div>
-      `;
-    } else if (currentType === 'sms') {
-      urlInputGroup.style.display = 'none';
-      container.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">Recipient Phone Number</label>
-          <input type="tel" id="smsPhone" class="form-control" value="+1 800 555 0199">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Pre-filled Message</label>
-          <input type="text" id="smsMsg" class="form-control" value="Hi, please text me back!">
+          <label class="form-label">Catalog URL</label>
+          <input type="url" id="vCatalog" class="form-control" placeholder="https://example.com/catalog.pdf" value="">
         </div>
       `;
-    } else if (currentType === 'text') {
-      urlInputGroup.style.display = 'none';
-      container.innerHTML = `
-        <div class="form-group">
-          <label class="form-label">Plain Text Content</label>
-          <textarea id="textPayload" class="form-control" rows="4">Welcome to our self-hosted dynamic QR Code system!</textarea>
-        </div>
-      `;
-    }
 
     // Attach input listeners
-    container.querySelectorAll('input, select, textarea').forEach(el => {
+    container.querySelectorAll('input:not([type="file"]), select, textarea').forEach(el => {
       el.addEventListener('input', updateLivePreview);
     });
+
+    // Cloudinary Upload Logic
+    const photoInput = document.getElementById('vPhotoUpload');
+    const photoUrlInput = document.getElementById('vPhotoUrl');
+    const uploadStatus = document.getElementById('uploadStatus');
+
+    if (photoInput) {
+      photoInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadStatus.textContent = 'Uploading to Cloudinary...';
+        uploadStatus.style.color = '#f59e0b'; // warning color
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'vcard_profiles');
+
+        try {
+          // Cloud name from user: nop0auzt
+          const res = await fetch('https://api.cloudinary.com/v1_1/nop0auzt/image/upload', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+          if (data.secure_url) {
+            photoUrlInput.value = data.secure_url;
+            uploadStatus.textContent = 'Upload successful! ✓';
+            uploadStatus.style.color = '#10b981'; // success color
+            updateLivePreview();
+          } else {
+            uploadStatus.textContent = 'Upload failed.';
+            uploadStatus.style.color = '#ef4444'; // error color
+          }
+        } catch (err) {
+          console.error(err);
+          uploadStatus.textContent = 'Error uploading image.';
+          uploadStatus.style.color = '#ef4444';
+        }
+      });
+    }
   }
 
   function initFormInputs() {
@@ -227,32 +224,29 @@ document.addEventListener('DOMContentLoaded', () => {
   function getRawQRPayload(overrideShortCode) {
     let payload = '';
 
-    if (currentType === 'url') {
-      payload = document.getElementById('destinationUrl').value.trim() || 'https://example.com';
-    } else if (currentType === 'wifi') {
-      const ssid = document.getElementById('wifiSsid')?.value || 'MyWiFi';
-      const pass = document.getElementById('wifiPass')?.value || '';
-      const enc  = document.getElementById('wifiEnc')?.value  || 'WPA';
-      payload = `WIFI:S:${ssid};T:${enc};P:${pass};;`;
-    } else if (currentType === 'vcard') {
-      const name  = document.getElementById('vName')?.value  || 'Contact Name';
-      const org   = document.getElementById('vOrg')?.value   || '';
-      const phone = document.getElementById('vPhone')?.value || '';
-      const email = document.getElementById('vEmail')?.value || '';
-      const title = document.getElementById('vTitle')?.value || '';
-      payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${name};;;\r\nFN:${name}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}\r\nEND:VCARD`;
-    } else if (currentType === 'email') {
-      const to  = document.getElementById('emailTo')?.value || '';
-      const sub = encodeURIComponent(document.getElementById('emailSub')?.value  || '');
-      const body= encodeURIComponent(document.getElementById('emailBody')?.value || '');
-      payload = `mailto:${to}?subject=${sub}&body=${body}`;
-    } else if (currentType === 'sms') {
-      const phone = document.getElementById('smsPhone')?.value || '';
-      const msg   = encodeURIComponent(document.getElementById('smsMsg')?.value || '');
-      payload = `smsto:${phone}:${msg}`;
-    } else if (currentType === 'text') {
-      payload = document.getElementById('textPayload')?.value || 'Sample Text';
-    }
+    const name  = document.getElementById('vName')?.value  || 'Contact Name';
+    const org   = document.getElementById('vOrg')?.value   || '';
+    const phone = document.getElementById('vPhone')?.value || '';
+    const email = document.getElementById('vEmail')?.value || '';
+    const title = document.getElementById('vTitle')?.value || '';
+    const addr1 = document.getElementById('vAddr1')?.value || '';
+    const addr2 = document.getElementById('vAddr2')?.value || '';
+    const whatsapp = document.getElementById('vWhatsapp')?.value || '';
+    const facebook = document.getElementById('vFacebook')?.value || '';
+    const catalog = document.getElementById('vCatalog')?.value || '';
+    const photo = document.getElementById('vPhotoUrl')?.value || '';
+
+    let adrStr = '';
+    if (addr1) adrStr += `\r\nADR;TYPE=WORK:;;${addr1};;;;`;
+    if (addr2) adrStr += `\r\nADR;TYPE=HOME:;;${addr2};;;;`;
+
+    let customUrls = '';
+    if (whatsapp) customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`;
+    if (facebook) customUrls += `\r\nURL;TYPE=Facebook:${facebook}`;
+    if (catalog) customUrls += `\r\nURL;TYPE=Catalog:${catalog}`;
+    if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;
+
+    payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${name};;;\r\nFN:${name}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
 
     // For DYNAMIC QRs of ANY type: the QR matrix encodes the server short URL.
     // The raw payload (vCard string, destination URL, etc.) is stored in the DB.
@@ -624,6 +618,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const org   = (currentPayload.match(/ORG:(.*)/i)    || [])[1]?.trim() || '';
       const phone = (currentPayload.match(/TEL[^:]*:(.*)/i) || [])[1]?.trim() || '';
       const email = (currentPayload.match(/EMAIL[^:]*:(.*)/i) || [])[1]?.trim() || '';
+      
+      const addr1 = (currentPayload.match(/ADR;TYPE=WORK:;;(.*);;;;/i) || [])[1]?.trim() || '';
+      const addr2 = (currentPayload.match(/ADR;TYPE=HOME:;;(.*);;;;/i) || [])[1]?.trim() || '';
+      const wa    = (currentPayload.match(/URL;TYPE=WhatsApp:(.*)/i) || [])[1]?.trim() || '';
+      const fb    = (currentPayload.match(/URL;TYPE=Facebook:(.*)/i) || [])[1]?.trim() || '';
+      const cat   = (currentPayload.match(/URL;TYPE=Catalog:(.*)/i) || [])[1]?.trim() || '';
 
       document.getElementById('editModalBody').innerHTML = `
         <div style="background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(236,72,153,.08));border:1px solid rgba(79,70,229,.25);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
@@ -657,6 +657,28 @@ document.addEventListener('DOMContentLoaded', () => {
             <input id="ef_email" class="form-control" value="${escapeHtml(email)}">
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">Corporate Office Address</label>
+          <input id="ef_addr1" class="form-control" value="${escapeHtml(addr1)}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Factory Address</label>
+          <input id="ef_addr2" class="form-control" value="${escapeHtml(addr2)}">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">WhatsApp Number</label>
+            <input id="ef_wa" class="form-control" value="${escapeHtml(wa.replace('https://wa.me/', ''))}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Facebook URL</label>
+            <input id="ef_fb" class="form-control" value="${escapeHtml(fb)}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Catalog URL</label>
+          <input id="ef_cat" class="form-control" value="${escapeHtml(cat)}">
+        </div>
       `;
       document.getElementById('editModalTitle').textContent = '✏️ Edit vCard Profile';
     } else {
@@ -689,7 +711,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const org   = document.getElementById('ef_org')?.value.trim()   || '';
       const phone = document.getElementById('ef_phone')?.value.trim() || '';
       const email = document.getElementById('ef_email')?.value.trim() || '';
-      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${fn};;;\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}\r\nEND:VCARD`;
+      const addr1 = document.getElementById('ef_addr1')?.value.trim() || '';
+      const addr2 = document.getElementById('ef_addr2')?.value.trim() || '';
+      const wa    = document.getElementById('ef_wa')?.value.trim() || '';
+      const fb    = document.getElementById('ef_fb')?.value.trim() || '';
+      const cat   = document.getElementById('ef_cat')?.value.trim() || '';
+
+      let adrStr = '';
+      if (addr1) adrStr += `\r\nADR;TYPE=WORK:;;${addr1};;;;`;
+      if (addr2) adrStr += `\r\nADR;TYPE=HOME:;;${addr2};;;;`;
+
+      let customUrls = '';
+      if (wa) customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${wa.replace(/[^0-9]/g, '')}`;
+      if (fb) customUrls += `\r\nURL;TYPE=Facebook:${fb}`;
+      if (cat) customUrls += `\r\nURL;TYPE=Catalog:${cat}`;
+
+      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${fn};;;\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
     } else {
       newPayload = document.getElementById('editDestinationUrl')?.value.trim();
       if (!newPayload) return alert('Please enter a destination URL');

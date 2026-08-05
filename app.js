@@ -545,6 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="qr-item-footer">
           ${qr.isDynamic ? `<button class="btn btn-secondary btn-sm btn-edit-url" data-id="${qr.id}" data-url="${escapeHtml(qr.destinationUrl)}">✏️ Edit Destination</button>` : '<span></span>'}
           <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary btn-sm btn-download-dash" data-id="${qr.id}" style="background: var(--primary); color: white; border: none;">⬇️ Download</button>
             <button class="btn btn-secondary btn-sm btn-test-link" data-code="${qr.shortCode}">🔗 Test</button>
             <button class="btn btn-danger btn-sm btn-delete-qr" data-id="${qr.id}">🗑️</button>
           </div>
@@ -592,6 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // Dashboard delete buttons
     grid.querySelectorAll('.btn-delete-qr').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
@@ -600,6 +602,29 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast('QR Code deleted.', 'info');
           renderDashboard();
         }
+      });
+    });
+
+    // Dashboard download buttons
+    grid.querySelectorAll('.btn-download-dash').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const qr = window.QRStorage.getAllQRs().find(q => q.id === id);
+        if (!qr) return;
+
+        showToast('Generating high-res QR code for printing...', 'info');
+        const payload = qr.isDynamic ? `${window.location.origin}/q/${qr.shortCode}` : qr.destinationUrl;
+        const tempCanvas = document.createElement('canvas');
+        
+        window.QREngine.renderToCanvas(tempCanvas, payload, Object.assign({}, qr.options, { size: 1000, frameStyle: 'none' }));
+        
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.download = `${qr.shortCode}_qr_print.png`;
+          link.href = tempCanvas.toDataURL('image/png');
+          link.click();
+          showToast('Download started!', 'success');
+        }, 150);
       });
     });
   }

@@ -24,17 +24,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#8b5cf6",
+              "colorDark": "#000000",
               "colorLight": "#ffffff",
               "gradient": true,
-              "gradientColor": "#ec4899",
-              "bodyStyle": "extra_rounded",
-              "eyeStyle": "rounded",
-              "eyeBallStyle": "circle",
+              "gradientColor": "#f97316",
+              "bodyStyle": "square",
+              "eyeStyle": "square",
+              "eyeBallStyle": "square",
               "logoIcon": "none",
               "frameStyle": "none",
               "frameText": "",
-              "frameColor": "#8b5cf6"
+              "frameColor": "#000000"
           }
       },
       {
@@ -48,17 +48,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#8b5cf6",
+              "colorDark": "#000000",
               "colorLight": "#ffffff",
               "gradient": true,
-              "gradientColor": "#ec4899",
-              "bodyStyle": "extra_rounded",
-              "eyeStyle": "rounded",
-              "eyeBallStyle": "circle",
+              "gradientColor": "#f97316",
+              "bodyStyle": "square",
+              "eyeStyle": "square",
+              "eyeBallStyle": "square",
               "logoIcon": "none",
               "frameStyle": "none",
               "frameText": "",
-              "frameColor": "#8b5cf6"
+              "frameColor": "#000000"
           }
       },
       {
@@ -72,17 +72,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#8b5cf6",
+              "colorDark": "#000000",
               "colorLight": "#ffffff",
               "gradient": true,
-              "gradientColor": "#ec4899",
-              "bodyStyle": "extra_rounded",
-              "eyeStyle": "rounded",
-              "eyeBallStyle": "circle",
+              "gradientColor": "#f97316",
+              "bodyStyle": "square",
+              "eyeStyle": "square",
+              "eyeBallStyle": "square",
               "logoIcon": "none",
               "frameStyle": "none",
               "frameText": "",
-              "frameColor": "#8b5cf6"
+              "frameColor": "#000000"
           }
       },
       {
@@ -96,17 +96,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#8b5cf6",
+              "colorDark": "#000000",
               "colorLight": "#ffffff",
               "gradient": true,
-              "gradientColor": "#ec4899",
-              "bodyStyle": "extra_rounded",
-              "eyeStyle": "rounded",
-              "eyeBallStyle": "circle",
+              "gradientColor": "#f97316",
+              "bodyStyle": "square",
+              "eyeStyle": "square",
+              "eyeBallStyle": "square",
               "logoIcon": "none",
               "frameStyle": "none",
               "frameText": "",
-              "frameColor": "#8b5cf6"
+              "frameColor": "#000000"
           }
       },
       {
@@ -120,17 +120,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#8b5cf6",
+              "colorDark": "#000000",
               "colorLight": "#ffffff",
               "gradient": true,
-              "gradientColor": "#ec4899",
-              "bodyStyle": "extra_rounded",
-              "eyeStyle": "rounded",
-              "eyeBallStyle": "circle",
+              "gradientColor": "#f97316",
+              "bodyStyle": "square",
+              "eyeStyle": "square",
+              "eyeBallStyle": "square",
               "logoIcon": "none",
               "frameStyle": "none",
               "frameText": "",
-              "frameColor": "#8b5cf6"
+              "frameColor": "#000000"
           }
       },
       {

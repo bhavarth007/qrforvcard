@@ -31,17 +31,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         },
         {
@@ -55,17 +55,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         },
         {
@@ -79,17 +79,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         },
         {
@@ -103,17 +103,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         },
         {
@@ -127,17 +127,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         },
         {
@@ -151,17 +151,17 @@ DEFAULT_DB = {
             "createdAt": datetime.now().isoformat(),
             "updatedAt": datetime.now().isoformat(),
             "options": {
-                "colorDark": "#8b5cf6",
+                "colorDark": "#000000",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#ec4899",
-                "bodyStyle": "extra_rounded",
-                "eyeStyle": "rounded",
-                "eyeBallStyle": "circle",
+                "gradientColor": "#f97316",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
                 "logoIcon": "none",
                 "frameStyle": "none",
                 "frameText": "",
-                "frameColor": "#8b5cf6"
+                "frameColor": "#000000"
             }
         }
     ],

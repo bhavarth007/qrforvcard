@@ -643,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const org   = (currentPayload.match(/ORG:(.*)/i)    || [])[1]?.trim() || '';
       const phone = (currentPayload.match(/TEL[^:]*:(.*)/i) || [])[1]?.trim() || '';
       const email = (currentPayload.match(/EMAIL[^:]*:(.*)/i) || [])[1]?.trim() || '';
+      const photo = (currentPayload.match(/PHOTO;VALUE=URI:(.*)/i) || [])[1]?.trim() || '';
       
       const addr1 = (currentPayload.match(/ADR;TYPE=WORK:;;(.*);;;;/i) || [])[1]?.trim() || '';
       const addr2 = (currentPayload.match(/ADR;TYPE=HOME:;;(.*);;;;/i) || [])[1]?.trim() || '';
@@ -657,6 +658,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="font-weight:700;color:var(--text-primary);font-size:.88rem;">Edit vCard Profile</div>
             <div style="color:var(--text-muted);font-size:.78rem;">The QR code URL stays the same — only the profile data updates instantly</div>
           </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <label class="form-label">Profile Photo (Cloudinary)</label>
+          <input type="file" id="ef_photoUpload" class="form-control" accept="image/*">
+          <input type="hidden" id="ef_photoUrl" value="${escapeHtml(photo)}">
+          <small id="ef_uploadStatus" style="color: var(--text-muted); font-size: 0.75rem;">
+            ${photo ? 'Current photo saved. Select a new one to replace.' : 'Select an image to upload'}
+          </small>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -706,6 +715,46 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
       document.getElementById('editModalTitle').textContent = '✏️ Edit vCard Profile';
+
+      // Attach upload listener for modal
+      const photoInput = document.getElementById('ef_photoUpload');
+      const photoUrlInput = document.getElementById('ef_photoUrl');
+      const uploadStatus = document.getElementById('ef_uploadStatus');
+
+      if (photoInput) {
+        photoInput.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          uploadStatus.textContent = 'Uploading to Cloudinary...';
+          uploadStatus.style.color = '#f59e0b'; // warning color
+
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', 'vcard_profiles');
+
+          try {
+            // Cloud name from user: nop0auzt
+            const res = await fetch('https://api.cloudinary.com/v1_1/nop0auzt/image/upload', {
+              method: 'POST',
+              body: formData
+            });
+            const data = await res.json();
+            if (data.secure_url) {
+              photoUrlInput.value = data.secure_url;
+              uploadStatus.textContent = 'Upload successful! ✓';
+              uploadStatus.style.color = '#10b981'; // success color
+            } else {
+              uploadStatus.textContent = 'Upload failed.';
+              uploadStatus.style.color = '#ef4444'; // error color
+            }
+          } catch (err) {
+            console.error(err);
+            uploadStatus.textContent = 'Error uploading image.';
+            uploadStatus.style.color = '#ef4444';
+          }
+        });
+      }
     } else {
       // URL / other type
       document.getElementById('editModalBody').innerHTML = `
@@ -741,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const wa    = document.getElementById('ef_wa')?.value.trim() || '';
       const fb    = document.getElementById('ef_fb')?.value.trim() || '';
       const cat   = document.getElementById('ef_cat')?.value.trim() || '';
+      const photo = document.getElementById('ef_photoUrl')?.value.trim() || '';
 
       let adrStr = '';
       if (addr1) adrStr += `\r\nADR;TYPE=WORK:;;${addr1};;;;`;
@@ -750,6 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (wa) customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${wa.replace(/[^0-9]/g, '')}`;
       if (fb) customUrls += `\r\nURL;TYPE=Facebook:${fb}`;
       if (cat) customUrls += `\r\nURL;TYPE=Catalog:${cat}`;
+      if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;
 
       newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${fn};;;\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
     } else {

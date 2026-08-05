@@ -24,17 +24,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#4f46e5",
+              "colorDark": "#8b5cf6",
               "colorLight": "#ffffff",
               "gradient": true,
               "gradientColor": "#ec4899",
-              "bodyStyle": "rounded",
+              "bodyStyle": "extra_rounded",
               "eyeStyle": "rounded",
               "eyeBallStyle": "circle",
-              "logoIcon": "user",
-              "frameStyle": "scan_me",
-              "frameText": "SAVE CONTACT",
-              "frameColor": "#4f46e5"
+              "logoIcon": "none",
+              "frameStyle": "none",
+              "frameText": "",
+              "frameColor": "#8b5cf6"
           }
       },
       {
@@ -48,17 +48,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#4f46e5",
+              "colorDark": "#8b5cf6",
               "colorLight": "#ffffff",
               "gradient": true,
               "gradientColor": "#ec4899",
-              "bodyStyle": "rounded",
+              "bodyStyle": "extra_rounded",
               "eyeStyle": "rounded",
               "eyeBallStyle": "circle",
-              "logoIcon": "user",
-              "frameStyle": "scan_me",
-              "frameText": "SAVE CONTACT",
-              "frameColor": "#4f46e5"
+              "logoIcon": "none",
+              "frameStyle": "none",
+              "frameText": "",
+              "frameColor": "#8b5cf6"
           }
       },
       {
@@ -72,17 +72,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#4f46e5",
+              "colorDark": "#8b5cf6",
               "colorLight": "#ffffff",
               "gradient": true,
               "gradientColor": "#ec4899",
-              "bodyStyle": "rounded",
+              "bodyStyle": "extra_rounded",
               "eyeStyle": "rounded",
               "eyeBallStyle": "circle",
-              "logoIcon": "user",
-              "frameStyle": "scan_me",
-              "frameText": "SAVE CONTACT",
-              "frameColor": "#4f46e5"
+              "logoIcon": "none",
+              "frameStyle": "none",
+              "frameText": "",
+              "frameColor": "#8b5cf6"
           }
       },
       {
@@ -96,17 +96,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#4f46e5",
+              "colorDark": "#8b5cf6",
               "colorLight": "#ffffff",
               "gradient": true,
               "gradientColor": "#ec4899",
-              "bodyStyle": "rounded",
+              "bodyStyle": "extra_rounded",
               "eyeStyle": "rounded",
               "eyeBallStyle": "circle",
-              "logoIcon": "user",
-              "frameStyle": "scan_me",
-              "frameText": "SAVE CONTACT",
-              "frameColor": "#4f46e5"
+              "logoIcon": "none",
+              "frameStyle": "none",
+              "frameText": "",
+              "frameColor": "#8b5cf6"
           }
       },
       {
@@ -120,17 +120,17 @@ function initializeSeedData() {
           "createdAt": new Date().toISOString(),
           "updatedAt": new Date().toISOString(),
           "options": {
-              "colorDark": "#4f46e5",
+              "colorDark": "#8b5cf6",
               "colorLight": "#ffffff",
               "gradient": true,
               "gradientColor": "#ec4899",
-              "bodyStyle": "rounded",
+              "bodyStyle": "extra_rounded",
               "eyeStyle": "rounded",
               "eyeBallStyle": "circle",
-              "logoIcon": "user",
-              "frameStyle": "scan_me",
-              "frameText": "SAVE CONTACT",
-              "frameColor": "#4f46e5"
+              "logoIcon": "none",
+              "frameStyle": "none",
+              "frameText": "",
+              "frameColor": "#8b5cf6"
           }
       },
       {

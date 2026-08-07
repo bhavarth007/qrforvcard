@@ -574,15 +574,7 @@ async def dynamic_redirect(short_code: str, request: Request):
                             <div class="info-value">{profile['addr1']}</div>
                         </div>
                     </div>
-                    ''' if profile['addr1'] and profile['addr2'] else (f'''
-                    <div class="info-item">
-                        <div class="info-icon">📍</div>
-                        <div>
-                            <div class="info-label">Address</div>
-                            <div class="info-value">{profile['addr1']}</div>
-                        </div>
-                    </div>
-                    ''' if profile['addr1'] else '')}
+                    ''' if profile['addr1'] else ''}
 
                     {f'''
                     <div class="info-item">

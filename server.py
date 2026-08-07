@@ -191,7 +191,9 @@ def load_db() -> Dict[str, Any]:
                     updated = True
                 else:
                     curr = data["qrcodes"][idx]
-                    if curr.get("destinationUrl", "") != seed["destinationUrl"]:
+                    curr_url = curr.get("destinationUrl", "")
+                    # Only upgrade legacy seed records containing old outdated strings
+                    if "Sahjanand Pvt. Ltd." in curr_url or "Ghanshayam Synthetic" in curr_url:
                         data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
                         data["qrcodes"][idx]["title"] = seed["title"]
                         updated = True
@@ -228,7 +230,7 @@ def parse_user_agent(ua_str: str) -> tuple[str, str]:
 
 # Helper to parse raw vCard payload into key-values
 def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
-    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": "", "addr1": "", "addr2": "", "wa": "", "fb": "", "cat": ""}
+    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": "", "addr1": "", "addr2": "", "wa": "", "fb": "", "cat": "", "photo": ""}
     
     fn_match = re.search(r'FN:(.*)', raw_vcard, re.IGNORECASE)
     if fn_match:
@@ -254,13 +256,17 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
     if email_match:
         info["email"] = email_match.group(1).strip()
         
-    addr_work = re.search(r'ADR;TYPE=WORK:;;(.*);;;;', raw_vcard, re.IGNORECASE)
+    addr_work = re.search(r'ADR;TYPE=WORK:;;?([^;\r\n]+)', raw_vcard, re.IGNORECASE)
+    if not addr_work:
+        addr_work = re.search(r'ADR;TYPE=WORK:(.*)', raw_vcard, re.IGNORECASE)
     if addr_work:
-        info["addr1"] = addr_work.group(1).strip()
-        
-    addr_home = re.search(r'ADR;TYPE=HOME:;;(.*);;;;', raw_vcard, re.IGNORECASE)
+        info["addr1"] = addr_work.group(1).replace(';', ' ').strip()
+
+    addr_home = re.search(r'ADR;TYPE=HOME:;;?([^;\r\n]+)', raw_vcard, re.IGNORECASE)
+    if not addr_home:
+        addr_home = re.search(r'ADR;TYPE=HOME:(.*)', raw_vcard, re.IGNORECASE)
     if addr_home:
-        info["addr2"] = addr_home.group(1).strip()
+        info["addr2"] = addr_home.group(1).replace(';', ' ').strip()
         
     wa = re.search(r'URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
     if wa:
@@ -275,10 +281,10 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         info["cat"] = cat.group(1).strip()
         
     photo = re.search(r'URL;TYPE=Photo:(.*)', raw_vcard, re.IGNORECASE)
+    if not photo:
+        photo = re.search(r'PHOTO;VALUE=URI:(.*)', raw_vcard, re.IGNORECASE)
     if photo:
         info["photo"] = photo.group(1).strip()
-    else:
-        info["photo"] = ""
 
     return info
 

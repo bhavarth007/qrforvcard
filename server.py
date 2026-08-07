@@ -175,7 +175,22 @@ def load_db() -> Dict[str, Any]:
         return DEFAULT_DB
     try:
         with open(DB_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            updated = False
+            for seed in DEFAULT_DB["qrcodes"]:
+                idx = next((i for i, q in enumerate(data.get("qrcodes", [])) if q["id"] == seed["id"]), None)
+                if idx is None:
+                    data.setdefault("qrcodes", []).append(seed)
+                    updated = True
+                else:
+                    curr = data["qrcodes"][idx]
+                    if "Sahjanand Polyweaves" not in curr.get("destinationUrl", ""):
+                        data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
+                        data["qrcodes"][idx]["title"] = seed["title"]
+                        updated = True
+            if updated:
+                save_db(data)
+            return data
     except Exception:
         return DEFAULT_DB
 

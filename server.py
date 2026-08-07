@@ -469,11 +469,20 @@ async def dynamic_redirect(short_code: str, request: Request):
                     font-weight: 700;
                     margin-bottom: 0.25rem;
                 }}
+                .profile-title {{
+                    font-size: 0.95rem;
+                    color: #cbd5e1;
+                    font-weight: 600;
+                    margin-bottom: 0.2rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }}
                 .profile-org {{
-                    font-size: 0.92rem;
+                    font-size: 0.9rem;
                     color: #94a3b8;
                     margin-bottom: 1.75rem;
                     font-weight: 500;
+                    line-height: 1.35;
                 }}
                 .info-list {{
                     display: flex;
@@ -597,7 +606,8 @@ async def dynamic_redirect(short_code: str, request: Request):
             <div class="profile-card">
                 {f'''<img src="{profile['photo']}" alt="{profile['fn']}" class="avatar-box" style="object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 30px rgba(99, 102, 241, 0.4); cursor: pointer;" onclick="openPhotoModal(this.src)">''' if profile['photo'] else f'''<div class="avatar-box">{initials}</div>'''}
                 <h1 class="profile-name">{profile['fn']}</h1>
-                <p class="profile-org">{profile['title']} {f"• {profile['org']}" if profile['org'] else ""}</p>
+                {f'''<p class="profile-title">{profile['title']}</p>''' if profile['title'] else ''}
+                {f'''<p class="profile-org">{profile['org']}</p>''' if profile['org'] else ''}
 
                 <div class="info-list">
                     {f'''

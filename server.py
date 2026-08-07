@@ -8,6 +8,7 @@ import os
 import re
 import time
 import urllib.parse
+import secrets
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Request, HTTPException
@@ -16,6 +17,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI(title="QR Track - Dynamic Redirect & Profile Engine", version="1.0.0")
+
+ACTIVE_SESSION = {
+    "token": None,
+    "last_active": 0
+}
+SESSION_TIMEOUT = 300  # 5 minutes session timeout
 
 DB_FILE = os.path.join(os.path.dirname(__file__), "db.json")
 
@@ -819,6 +826,46 @@ async def delete_qrcode(qr_id: str):
 async def get_analytics():
     db = load_db()
     return db.get("analytics", [])
+
+class LoginSchema(BaseModel):
+    username: str
+    password: str
+
+class LogoutSchema(BaseModel):
+    token: Optional[str] = None
+
+@app.post("/api/login")
+async def login_api(credentials: LoginSchema):
+    now = time.time()
+    if credentials.username.strip() != "Admin" or credentials.password.strip() != "Admin":
+        raise HTTPException(status_code=401, detail="Invalid User Name or Password. Please try again.")
+
+    if ACTIVE_SESSION["token"] is not None and (now - ACTIVE_SESSION["last_active"]) < SESSION_TIMEOUT:
+        raise HTTPException(
+            status_code=403,
+            detail="Admin is currently logged in on another device. Please log out from that device first."
+        )
+
+    new_token = secrets.token_hex(16)
+    ACTIVE_SESSION["token"] = new_token
+    ACTIVE_SESSION["last_active"] = now
+    return {"success": True, "token": new_token}
+
+@app.post("/api/logout")
+async def logout_api(payload: LogoutSchema):
+    token = payload.token
+    if token and token == ACTIVE_SESSION["token"]:
+        ACTIVE_SESSION["token"] = None
+        ACTIVE_SESSION["last_active"] = 0
+    return {"success": True}
+
+@app.get("/api/session-status")
+async def session_status_api(token: Optional[str] = None):
+    now = time.time()
+    if token and token == ACTIVE_SESSION["token"] and (now - ACTIVE_SESSION["last_active"]) < SESSION_TIMEOUT:
+        ACTIVE_SESSION["last_active"] = now
+        return {"authenticated": True}
+    return {"authenticated": False}
 
 # Serve Frontend Web App
 @app.get("/")

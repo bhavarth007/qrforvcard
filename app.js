@@ -37,9 +37,158 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnalytics();
   initSimulator();
   initSettings();
+  initAuthListeners();
 
-  // Initial QR Draw
-  updateLivePreview();
+  // --- 0. AUTHENTICATION & SINGLE SESSION LOCK ---
+  let heartbeatTimer = null;
+
+  async function checkSessionStatus() {
+    const token = localStorage.getItem('admin_session_token');
+    if (!token) {
+      showLoginScreen();
+      return false;
+    }
+
+    try {
+      const res = await fetch(`/api/session-status?token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+      if (data.authenticated) {
+        hideLoginScreen();
+        startSessionHeartbeat();
+        return true;
+      } else {
+        localStorage.removeItem('admin_session_token');
+        showLoginScreen();
+        return false;
+      }
+    } catch (err) {
+      console.error('Session check error:', err);
+      return false;
+    }
+  }
+
+  function showLoginScreen() {
+    stopSessionHeartbeat();
+    const overlay = document.getElementById('loginOverlay');
+    const logoutBtn = document.getElementById('btnHeaderLogout');
+    if (overlay) overlay.style.display = 'flex';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+  }
+
+  function hideLoginScreen() {
+    const overlay = document.getElementById('loginOverlay');
+    const logoutBtn = document.getElementById('btnHeaderLogout');
+    if (overlay) overlay.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+  }
+
+  function startSessionHeartbeat() {
+    stopSessionHeartbeat();
+    heartbeatTimer = setInterval(async () => {
+      const token = localStorage.getItem('admin_session_token');
+      if (token) {
+        try {
+          const res = await fetch(`/api/session-status?token=${encodeURIComponent(token)}`);
+          const data = await res.json();
+          if (!data.authenticated) {
+            showToast('Session ended or active on another device.', 'error');
+            localStorage.removeItem('admin_session_token');
+            showLoginScreen();
+          }
+        } catch (e) {}
+      }
+    }, 20000);
+  }
+
+  function stopSessionHeartbeat() {
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+      heartbeatTimer = null;
+    }
+  }
+
+  function initAuthListeners() {
+    const form = document.getElementById('loginForm');
+    const errBanner = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('btnHeaderLogout');
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const submitBtn = document.getElementById('btnLoginSubmit');
+
+        if (!username || !password) {
+          if (errBanner) {
+            errBanner.textContent = 'Please enter both User Name and Password.';
+            errBanner.style.display = 'block';
+          }
+          return;
+        }
+
+        if (errBanner) errBanner.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success && data.token) {
+            localStorage.setItem('admin_session_token', data.token);
+            hideLoginScreen();
+            startSessionHeartbeat();
+            showToast('Welcome Admin! Logged in successfully.', 'success');
+
+            // Default redirect to Dashboard page
+            const dashBtn = document.querySelector('.nav-btn[data-tab="dashboard"]');
+            if (dashBtn) dashBtn.click();
+          } else {
+            const errMsg = data.detail || 'Invalid User Name or Password.';
+            if (errBanner) {
+              errBanner.textContent = errMsg;
+              errBanner.style.display = 'block';
+            }
+          }
+        } catch (err) {
+          console.error(err);
+          if (errBanner) {
+            errBanner.textContent = 'Server connection error. Please try again.';
+            errBanner.style.display = 'block';
+          }
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        const token = localStorage.getItem('admin_session_token');
+        if (token) {
+          try {
+            await fetch('/api/logout', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token })
+            });
+          } catch (e) {}
+        }
+        localStorage.removeItem('admin_session_token');
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        showLoginScreen();
+        showToast('Logged out successfully.', 'info');
+      });
+    }
+
+    // Perform initial session check
+    checkSessionStatus();
+  }
 
   // Sync state from server on startup
   function syncFromServer() {

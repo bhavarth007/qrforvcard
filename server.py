@@ -438,7 +438,7 @@ async def dynamic_redirect(short_code: str, request: Request):
                     border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 28px;
                     width: 100%;
-                    max-width: 420px;
+                    max-width: 480px;
                     padding: 2.25rem 1.75rem;
                     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
                     text-align: center;
@@ -528,7 +528,8 @@ async def dynamic_redirect(short_code: str, request: Request):
                 .info-value {{
                     font-size: 0.92rem;
                     font-weight: 600;
-                    word-break: break-all;
+                    word-break: break-word;
+                    overflow-wrap: anywhere;
                 }}
                 .btn-save {{
                     display: flex;

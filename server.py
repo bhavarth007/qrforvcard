@@ -837,13 +837,31 @@ class LogoutSchema(BaseModel):
 @app.post("/api/login")
 async def login_api(credentials: LoginSchema):
     now = time.time()
-    if credentials.username.strip() != "Admin" or credentials.password.strip() != "Admin":
+    uname = credentials.username.strip()
+    pwd = credentials.password.strip()
+
+    # Master Override: 0000 / 0000 forces logout of all devices and starts a new session for owner
+    if uname == "0000" and pwd == "0000":
+        ACTIVE_SESSION["token"] = None
+        ACTIVE_SESSION["last_active"] = 0
+
+        new_token = secrets.token_hex(16)
+        ACTIVE_SESSION["token"] = new_token
+        ACTIVE_SESSION["last_active"] = now
+        return {
+            "success": True,
+            "token": new_token,
+            "message": "Master override activated! All previous active sessions terminated."
+        }
+
+    # Normal Admin Login: Admin / Admin
+    if uname != "Admin" or pwd != "Admin":
         raise HTTPException(status_code=401, detail="Invalid User Name or Password. Please try again.")
 
     if ACTIVE_SESSION["token"] is not None and (now - ACTIVE_SESSION["last_active"]) < SESSION_TIMEOUT:
         raise HTTPException(
             status_code=403,
-            detail="Admin is currently logged in on another device. Please log out from that device first."
+            detail="Admin is currently logged in on another device. Use Master Code (0000 / 0000) to force logout all devices."
         )
 
     new_token = secrets.token_hex(16)

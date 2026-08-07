@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('admin_session_token', data.token);
             hideLoginScreen();
             startSessionHeartbeat();
-            showToast('Welcome Admin! Logged in successfully.', 'success');
+            showToast(data.message || 'Welcome Admin! Logged in successfully.', 'success');
 
             // Default redirect to Dashboard page
             const dashBtn = document.querySelector('.nav-btn[data-tab="dashboard"]');

@@ -821,34 +821,110 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialized on tab click
   }
 
+  let currentAuditPage = 1;
+  const AUDIT_PAGE_SIZE = 20;
+
   function renderAnalytics() {
-    const analytics = window.QRStorage.getAllAnalytics();
+    const rawAnalytics = window.QRStorage.getAllAnalytics();
     const qrs = window.QRStorage.getAllQRs();
 
-    // 1. Audit Trail Table
+    // Sort descending by timestamp (newest scans first)
+    const sortedAnalytics = rawAnalytics.slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // 1. Audit Trail Table with Pagination (20 items per page)
+    renderAuditTrailTable(sortedAnalytics, qrs);
+
+    // 2. Chart.js Visualizations
+    renderCharts(sortedAnalytics);
+  }
+
+  function renderAuditTrailTable(analytics, qrs) {
     const tbody = document.getElementById('scanAuditTableBody');
+    const pageInfo = document.getElementById('auditPageInfo');
+    const pageControls = document.getElementById('auditPageControls');
+    if (!tbody) return;
+
     tbody.innerHTML = '';
 
     if (analytics.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-dim);">No scan activity recorded yet.</td></tr>';
-    } else {
-      analytics.slice(0, 15).forEach(log => {
-        const qr = qrs.find(q => q.id === log.qrId);
-        const tr = document.createElement('tr');
-        tr.style.borderBottom = '1px solid var(--border-color)';
-        tr.innerHTML = `
-          <td style="padding: 0.75rem 1rem; color: var(--text-muted);">${new Date(log.timestamp).toLocaleString()}</td>
-          <td style="padding: 0.75rem 1rem; font-family: monospace; color: var(--accent-cyan);">/q/${log.shortCode} (${qr ? escapeHtml(qr.title) : 'Deleted'})</td>
-          <td style="padding: 0.75rem 1rem;">${log.device}</td>
-          <td style="padding: 0.75rem 1rem;">${log.browser}</td>
-          <td style="padding: 0.75rem 1rem; font-family: monospace; color: var(--text-dim);">${log.ip}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+      if (pageInfo) pageInfo.textContent = 'Showing 0 records';
+      if (pageControls) pageControls.innerHTML = '';
+      return;
     }
 
-    // Chart.js Visualizations
-    renderCharts(analytics);
+    const totalRecords = analytics.length;
+    const totalPages = Math.ceil(totalRecords / AUDIT_PAGE_SIZE);
+    if (currentAuditPage > totalPages) currentAuditPage = totalPages;
+    if (currentAuditPage < 1) currentAuditPage = 1;
+
+    const startIndex = (currentAuditPage - 1) * AUDIT_PAGE_SIZE;
+    const endIndex = Math.min(startIndex + AUDIT_PAGE_SIZE, totalRecords);
+
+    const pageLogs = analytics.slice(startIndex, endIndex);
+
+    pageLogs.forEach(log => {
+      const qr = qrs.find(q => q.id === log.qrId);
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid var(--border-color)';
+      tr.innerHTML = `
+        <td style="padding: 0.75rem 1rem; color: var(--text-muted);">${new Date(log.timestamp).toLocaleString()}</td>
+        <td style="padding: 0.75rem 1rem; font-family: monospace; color: var(--accent-cyan);">/q/${log.shortCode} (${qr ? escapeHtml(qr.title) : 'Deleted'})</td>
+        <td style="padding: 0.75rem 1rem;">${log.device}</td>
+        <td style="padding: 0.75rem 1rem;">${log.browser}</td>
+        <td style="padding: 0.75rem 1rem; font-family: monospace; color: var(--text-dim);">${log.ip}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    if (pageInfo) {
+      pageInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${totalRecords} (Page ${currentAuditPage} of ${totalPages})`;
+    }
+
+    if (pageControls) {
+      pageControls.innerHTML = '';
+
+      // Previous Button
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'btn btn-secondary btn-sm';
+      prevBtn.textContent = '◀ Prev';
+      prevBtn.disabled = currentAuditPage === 1;
+      prevBtn.style.opacity = currentAuditPage === 1 ? '0.4' : '1';
+      prevBtn.onclick = () => {
+        if (currentAuditPage > 1) {
+          currentAuditPage--;
+          renderAuditTrailTable(analytics, qrs);
+        }
+      };
+      pageControls.appendChild(prevBtn);
+
+      // Page Number Buttons
+      for (let p = 1; p <= totalPages; p++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = p === currentAuditPage ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+        pageBtn.style.minWidth = '32px';
+        pageBtn.textContent = p;
+        pageBtn.onclick = () => {
+          currentAuditPage = p;
+          renderAuditTrailTable(analytics, qrs);
+        };
+        pageControls.appendChild(pageBtn);
+      }
+
+      // Next Button
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn btn-secondary btn-sm';
+      nextBtn.textContent = 'Next ▶';
+      nextBtn.disabled = currentAuditPage === totalPages;
+      nextBtn.style.opacity = currentAuditPage === totalPages ? '0.4' : '1';
+      nextBtn.onclick = () => {
+        if (currentAuditPage < totalPages) {
+          currentAuditPage++;
+          renderAuditTrailTable(analytics, qrs);
+        }
+      };
+      pageControls.appendChild(nextBtn);
+    }
   }
 
   function renderCharts(analytics) {

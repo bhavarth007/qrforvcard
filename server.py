@@ -7,6 +7,7 @@ import json
 import os
 import re
 import time
+import urllib.parse
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Request, HTTPException
@@ -567,23 +568,23 @@ async def dynamic_redirect(short_code: str, request: Request):
                     ''' if profile['org'] else ''}
                     
                     {f'''
-                    <div class="info-item">
-                        <div class="info-icon">📍</div>
+                    <a href="https://www.google.com/maps/search/?api=1&query={urllib.parse.quote_plus(profile['addr1'])}" target="_blank" class="info-item">
+                        <div class="info-icon" style="color:#ef4444; background:rgba(239,68,68,0.15);">📍</div>
                         <div>
                             <div class="info-label">Corporate Office</div>
                             <div class="info-value">{profile['addr1']}</div>
                         </div>
-                    </div>
+                    </a>
                     ''' if profile['addr1'] else ''}
 
                     {f'''
-                    <div class="info-item">
-                        <div class="info-icon">🏭</div>
+                    <a href="https://www.google.com/maps/search/?api=1&query={urllib.parse.quote_plus(profile['addr2'])}" target="_blank" class="info-item">
+                        <div class="info-icon" style="color:#f59e0b; background:rgba(245,158,11,0.15);">🏭</div>
                         <div>
                             <div class="info-label">Factory Location</div>
                             <div class="info-value">{profile['addr2']}</div>
                         </div>
-                    </div>
+                    </a>
                     ''' if profile['addr2'] else ''}
 
                     {f'''

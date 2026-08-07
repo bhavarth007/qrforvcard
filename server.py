@@ -51,7 +51,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "shailesh",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;SHAILESH DHOLARIYA;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:Ghanshayam Synthetic / Silken Sonnets\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:9925933568\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9925933568\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;SHAILESH DHOLARIYA;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:9925933568\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9925933568\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-05T12:45:50.000806",
             "updatedAt": "2026-08-05T12:47:36.241835",
@@ -75,7 +75,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "milan",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;MILAN HIDAD;;;\r\nFN:MILAN HIDAD\r\nORG:Ghanshayam Synthetic / Silken Sonnets\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:6355979500\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/6355979500\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;MILAN HIDAD;;;\r\nFN:MILAN HIDAD\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:6355979500\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/6355979500\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-05T12:45:50.000811",
             "updatedAt": "2026-08-05T12:48:08.400060",
@@ -184,7 +184,7 @@ def load_db() -> Dict[str, Any]:
                     updated = True
                 else:
                     curr = data["qrcodes"][idx]
-                    if "Sahjanand Polyweaves" not in curr.get("destinationUrl", ""):
+                    if curr.get("destinationUrl", "") != seed["destinationUrl"]:
                         data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
                         data["qrcodes"][idx]["title"] = seed["title"]
                         updated = True

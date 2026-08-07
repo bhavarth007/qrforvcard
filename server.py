@@ -542,12 +542,60 @@ async def dynamic_redirect(short_code: str, request: Request):
                     transform: translateY(-2px);
                     box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
                 }}
+                .img-modal {{
+                    display: none;
+                    position: fixed;
+                    z-index: 99999;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0, 0, 0, 0.92);
+                    backdrop-filter: blur(10px);
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                }}
+                .img-modal.active {{
+                    display: flex;
+                }}
+                .img-modal-img {{
+                    max-width: 90vw;
+                    max-height: 80vh;
+                    border-radius: 20px;
+                    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+                    object-fit: contain;
+                    border: 2px solid rgba(255, 255, 255, 0.2);
+                }}
+                .img-modal-close {{
+                    position: absolute;
+                    top: 24px;
+                    right: 24px;
+                    width: 46px;
+                    height: 46px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.2);
+                    color: #ffffff;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    font-size: 26px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    z-index: 100000;
+                    transition: all 0.2s ease;
+                }}
+                .img-modal-close:hover {{
+                    background: rgba(239, 68, 68, 0.85);
+                    transform: scale(1.1);
+                }}
             </style>
         </head>
         <body>
 
             <div class="profile-card">
-                {f'''<img src="{profile['photo']}" alt="{profile['fn']}" class="avatar-box" style="object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);">''' if profile['photo'] else f'''<div class="avatar-box">{initials}</div>'''}
+                {f'''<img src="{profile['photo']}" alt="{profile['fn']}" class="avatar-box" style="object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 30px rgba(99, 102, 241, 0.4); cursor: pointer;" onclick="openPhotoModal(this.src)">''' if profile['photo'] else f'''<div class="avatar-box">{initials}</div>'''}
                 <h1 class="profile-name">{profile['fn']}</h1>
                 <p class="profile-org">{profile['title']} {f"• {profile['org']}" if profile['org'] else ""}</p>
 
@@ -638,7 +686,24 @@ async def dynamic_redirect(short_code: str, request: Request):
                 </button>
             </div>
 
+            <div id="photoModal" class="img-modal" onclick="closePhotoModal(event)">
+                <button class="img-modal-close" onclick="closePhotoModal(event)">&times;</button>
+                <img id="fullPhoto" class="img-modal-img" src="" alt="Full Profile Photo">
+            </div>
+
             <script>
+                function openPhotoModal(src) {{
+                    if (!src) return;
+                    var modal = document.getElementById('photoModal');
+                    var fullImg = document.getElementById('fullPhoto');
+                    fullImg.src = src;
+                    modal.classList.add('active');
+                }}
+                function closePhotoModal(e) {{
+                    var modal = document.getElementById('photoModal');
+                    modal.classList.remove('active');
+                }}
+
                 document.getElementById('btnDownloadVCF').addEventListener('click', function() {{
                     var vcardData = "{vcard_encoded}".replace(/\\\\n/g, "\\r\\n");
                     var blob = new Blob([vcardData], {{ type: "text/vcard;charset=utf-8;" }});

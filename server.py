@@ -216,10 +216,14 @@ def load_db() -> Dict[str, Any]:
                 else:
                     curr = data["qrcodes"][idx]
                     curr_url = curr.get("destinationUrl", "")
-                    if seed["id"].startswith("qr-seed-") or seed["id"] == "qr-ghanshyam-card" or "Sahjanand" in curr_url or "Ghanshayam" in curr_url:
+                    if seed["id"] == "qr-ghanshyam-card":
                         data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
                         data["qrcodes"][idx]["title"] = seed["title"]
                         data["qrcodes"][idx]["options"] = seed["options"]
+                        updated = True
+                    elif "Sahjanand Pvt. Ltd." in curr_url or "Ghanshayam Synthetic" in curr_url:
+                        data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
+                        data["qrcodes"][idx]["title"] = seed["title"]
                         updated = True
             if updated:
                 save_db(data)

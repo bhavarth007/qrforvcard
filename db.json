@@ -170,17 +170,5 @@
         "frameColor": "#d4af37"
       }
     }
-  ],
-  "analytics": [
-    {
-      "id": "scan-1787481356334",
-      "qrId": "qr-ghanshyam-card",
-      "shortCode": "ghanshyam-card",
-      "timestamp": "2026-08-23T16:05:56.334060",
-      "device": "Desktop",
-      "browser": "Chrome",
-      "ip": "127.0.0.1",
-      "country": "Local Server"
-    }
   ]
 }

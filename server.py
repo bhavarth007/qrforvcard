@@ -216,10 +216,10 @@ def load_db() -> Dict[str, Any]:
                 else:
                     curr = data["qrcodes"][idx]
                     curr_url = curr.get("destinationUrl", "")
-                    # Only upgrade legacy seed records containing old outdated strings
-                    if "Sahjanand Pvt. Ltd." in curr_url or "Ghanshayam Synthetic" in curr_url:
+                    if seed["id"] == "qr-ghanshyam-card" or "Sahjanand Pvt. Ltd." in curr_url or "Ghanshayam Synthetic" in curr_url:
                         data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
                         data["qrcodes"][idx]["title"] = seed["title"]
+                        data["qrcodes"][idx]["options"] = seed["options"]
                         updated = True
             if updated:
                 save_db(data)

@@ -256,63 +256,68 @@ window.QREngine = {
     });
 
     // --- Center Logo Overlay ---
-    if (options.logoIcon && options.logoIcon !== 'none') {
-      if (this.ICONS[options.logoIcon]) {
-        const ls = qrArea * 0.20;                        // 20% of QR area
-        const lx = qrAreaX + (qrArea - ls) / 2;
-        const ly = qrAreaY + (qrArea - ls) / 2;
+    if (options.logoIcon) {
+      const ls = qrArea * 0.20;                        // 20% of QR area
+      const lx = qrAreaX + (qrArea - ls) / 2;
+      const ly = qrAreaY + (qrArea - ls) / 2;
 
-        // White backing
-        ctx.fillStyle = options.colorLight || '#ffffff';
-        ctx.beginPath();
-        ctx.arc(lx + ls / 2, ly + ls / 2, ls / 2 + 5, 0, Math.PI * 2);
-        ctx.fill();
+      // White backing
+      ctx.fillStyle = options.colorLight || '#ffffff';
+      ctx.beginPath();
+      ctx.arc(lx + ls / 2, ly + ls / 2, ls / 2 + 5, 0, Math.PI * 2);
+      ctx.fill();
 
-        const p = new Path2D(this.ICONS[options.logoIcon]);
-        ctx.save();
-        ctx.translate(lx + 4, ly + 4);
-        ctx.scale((ls - 8) / 24, (ls - 8) / 24);
-        ctx.fillStyle = options.colorDark;
-        ctx.fill(p);
-        ctx.restore();
-      } else {
-        if (!this._imgCache) this._imgCache = {};
-        const logoSrc = options.logoIcon;
-
-        const drawLogoImg = (img) => {
-          const aspect = (img.width && img.height) ? (img.width / img.height) : 1.75;
-          let lw = qrArea * 0.28;
-          let lh = lw / aspect;
-          if (lh > qrArea * 0.22) {
-            lh = qrArea * 0.22;
-            lw = lh * aspect;
-          }
-          const lx = qrAreaX + (qrArea - lw) / 2;
-          const ly = qrAreaY + (qrArea - lh) / 2;
-          const pad = Math.max(4, Math.round(qrArea * 0.015));
-
-          ctx.fillStyle = options.colorLight || '#ffffff';
-          ctx.beginPath();
-          ctx.roundRect(lx - pad, ly - pad, lw + pad * 2, lh + pad * 2, pad * 1.5);
-          ctx.fill();
-
-          ctx.strokeStyle = options.frameColor || '#d4af37';
-          ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.005));
-          ctx.stroke();
-
-          ctx.drawImage(img, lx, ly, lw, lh);
-        };
-
-        if (this._imgCache[logoSrc]) {
-          drawLogoImg(this._imgCache[logoSrc]);
+      if (options.logoIcon !== 'none') {
+        if (this.ICONS[options.logoIcon]) {
+          const p = new Path2D(this.ICONS[options.logoIcon]);
+          ctx.save();
+          ctx.translate(lx + 4, ly + 4);
+          ctx.scale((ls - 8) / 24, (ls - 8) / 24);
+          ctx.fillStyle = options.colorDark;
+          ctx.fill(p);
+          ctx.restore();
         } else {
-          const img = new Image();
-          img.crossOrigin = 'Anonymous';
-          img.onload = () => {
-            this._imgCache[logoSrc] = img;
-            drawLogoImg(img);
+          if (!this._imgCache) this._imgCache = {};
+          const logoSrc = options.logoIcon;
+
+          const drawLogoImg = (img) => {
+            const aspect = (img.width && img.height) ? (img.width / img.height) : 1.75;
+            let lw = qrArea * 0.28;
+            let lh = lw / aspect;
+            if (lh > qrArea * 0.22) {
+              lh = qrArea * 0.22;
+              lw = lh * aspect;
+            }
+            const lx = qrAreaX + (qrArea - lw) / 2;
+            const ly = qrAreaY + (qrArea - lh) / 2;
+            const pad = Math.max(4, Math.round(qrArea * 0.015));
+
+            ctx.fillStyle = options.colorLight || '#ffffff';
+            ctx.beginPath();
+            ctx.roundRect(lx - pad, ly - pad, lw + pad * 2, lh + pad * 2, pad * 1.5);
+            ctx.fill();
+
+            const logoBorderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card') 
+              ? (options.frameColor || '#d4af37') 
+              : (options.gradient ? (options.gradientColor || '#f97316') : (options.frameColor && options.frameColor !== '#000000' ? options.frameColor : '#ffffff'));
+            ctx.strokeStyle = logoBorderColor;
+            ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.005));
+            ctx.stroke();
+
+            ctx.drawImage(img, lx, ly, lw, lh);
           };
-          img.src = logoSrc;
+
+          if (this._imgCache[logoSrc]) {
+            drawLogoImg(this._imgCache[logoSrc]);
+          } else {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+              this._imgCache[logoSrc] = img;
+              drawLogoImg(img);
+            };
+            img.src = logoSrc;
+          }
         }
       }
     }

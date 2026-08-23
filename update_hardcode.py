@@ -16,9 +16,11 @@ end_idx = server_code.find('}', server_code.rfind('"options":'))
 end_idx = server_code.find(']', end_idx) + 1
 end_idx = server_code.find('}', end_idx) + 1
 
-new_db_str = "DEFAULT_DB = " + json.dumps({"qrcodes": qrcodes}, indent=4)
-# Clean up escaped newlines in destinationUrl to be actual python strings
-# wait, json.dumps handles string escapes correctly.
+py_db_str = json.dumps({"qrcodes": qrcodes}, indent=4)
+py_db_str = re.sub(r'\btrue\b', 'True', py_db_str)
+py_db_str = re.sub(r'\bfalse\b', 'False', py_db_str)
+py_db_str = re.sub(r'\bnull\b', 'None', py_db_str)
+new_db_str = "DEFAULT_DB = " + py_db_str
 server_code = server_code[:start_idx] + new_db_str + server_code[end_idx:]
 
 with open('server.py', 'w', encoding='utf-8') as f:

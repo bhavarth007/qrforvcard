@@ -765,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = qr.isDynamic ? `${window.location.origin}/q/${qr.shortCode}` : qr.destinationUrl;
         const tempCanvas = document.createElement('canvas');
         
-        window.QREngine.renderToCanvas(tempCanvas, payload, Object.assign({}, qr.options, { size: 1000, frameStyle: 'none' }));
+        window.QREngine.renderToCanvas(tempCanvas, payload, Object.assign({ size: 1000 }, qr.options));
         
         setTimeout(() => {
           const link = document.createElement('a');

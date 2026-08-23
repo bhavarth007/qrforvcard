@@ -43,7 +43,7 @@ function initializeSeedData() {
         "type": "vcard",
         "isDynamic": true,
         "shortCode": "shailesh",
-        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;SHAILESH DHOLARIYA;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:9925933568\r\nEMAIL:shaileshdholariya87@gmail.com\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9925933568\r\nEND:VCARD",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;SHAILESH DHOLARIYA;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:9925933568\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9925933568\r\nEND:VCARD",
         "active": true,
         "createdAt": "2026-08-05T12:45:50.000806",
         "updatedAt": "2026-08-05T12:47:36.241835",
@@ -67,7 +67,7 @@ function initializeSeedData() {
         "type": "vcard",
         "isDynamic": true,
         "shortCode": "milan",
-        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;MILAN HIDAD;;;\r\nFN:MILAN HIDAD\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:6355979500\r\nEMAIL:milanhidad3215@gmail.com\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/6355979500\r\nEND:VCARD",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;MILAN HIDAD;;;\r\nFN:MILAN HIDAD\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:6355979500\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/6355979500\r\nEND:VCARD",
         "active": true,
         "createdAt": "2026-08-05T12:45:50.000811",
         "updatedAt": "2026-08-05T12:48:08.400060",
@@ -91,7 +91,7 @@ function initializeSeedData() {
         "type": "vcard",
         "isDynamic": true,
         "shortCode": "dinesh",
-        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;DINESH BHUVA;;;\r\nFN:DINESH BHUVA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:9299999995\r\nEMAIL:dbhuva9898@gmail.com\r\nADR;TYPE=WORK:;;PLOT NO. C-127, ROAD NO. 20, NEAR M R CIRCLE ,SAYKHA GIDC,VAGRA,BHARUCH, GUJARAT-392140;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9299999995\r\nEND:VCARD",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;DINESH BHUVA;;;\r\nFN:DINESH BHUVA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:9299999995\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C-127, ROAD NO. 20, NEAR M R CIRCLE ,SAYKHA GIDC,VAGRA,BHARUCH, GUJARAT-392140;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9299999995\r\nEND:VCARD",
         "active": true,
         "createdAt": "2026-08-05T12:45:50.000816",
         "updatedAt": "2026-08-05T12:48:45.134445",
@@ -155,6 +155,30 @@ function initializeSeedData() {
             "frameStyle": "none",
             "frameText": "",
             "frameColor": "#000000"
+        }
+    },
+    {
+        "id": "qr-ghanshyam-card",
+        "title": "GHANSHYAM DOBARIYA - Sahjanand Gold Card",
+        "type": "vcard",
+        "isDynamic": true,
+        "shortCode": "ghanshyam-card",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9909143742\r\nEND:VCARD",
+        "active": true,
+        "createdAt": "2026-08-23T16:05:00.000000",
+        "updatedAt": "2026-08-23T16:05:00.000000",
+        "options": {
+            "colorDark": "#000000",
+            "colorLight": "#ffffff",
+            "gradient": false,
+            "gradientColor": "#000000",
+            "bodyStyle": "square",
+            "eyeStyle": "square",
+            "eyeBallStyle": "square",
+            "logoIcon": "/logo.png",
+            "frameStyle": "gold_card",
+            "frameText": "GHANSHYAM DOBARIYA",
+            "frameColor": "#d4af37"
         }
     }
 ];

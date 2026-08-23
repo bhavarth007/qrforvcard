@@ -66,50 +66,103 @@ window.QREngine = {
     if (options.frameStyle === 'scan_me')  { topPad = 20; botPad = 60; }
     if (options.frameStyle === 'wifi')     { topPad = 60; botPad = 20; }
     if (options.frameStyle === 'simple')   { topPad = 30; botPad = 40; }
+    if (options.frameStyle === 'gold_card' || options.frameStyle === 'card') { topPad = 20; botPad = 90; }
 
     const W = options.size;
     const H = options.size + topPad + botPad;
     canvas.width  = W;
     canvas.height = H;
 
-    // --- Background ---
-    ctx.fillStyle = options.colorLight;
-    ctx.fillRect(0, 0, W, H);
+    // --- Background & Frame ---
+    let margin   = 24;
+    let qrAreaX  = margin;
+    let qrAreaY  = margin + topPad;
+    let qrArea   = W - margin * 2;
 
-    // --- Frame Template ---
-    if (options.frameStyle !== 'none') {
-      ctx.fillStyle = options.frameColor;
-      if (options.frameStyle === 'scan_me') {
-        ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.fill();
-        ctx.fillStyle = options.colorLight;
-        ctx.beginPath(); ctx.roundRect(20, 20, W - 40, options.size - 20, 12); ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 18px "Outfit", sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(options.frameText.toUpperCase(), W / 2, H - 30);
-      } else if (options.frameStyle === 'wifi') {
-        ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.fill();
-        ctx.fillStyle = options.colorLight;
-        ctx.beginPath(); ctx.roundRect(20, 60, W - 40, options.size - 20, 12); ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 18px "Outfit", sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(options.frameText.toUpperCase(), W / 2, 35);
-      } else if (options.frameStyle === 'simple') {
-        ctx.strokeStyle = options.frameColor; ctx.lineWidth = 6;
-        ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.stroke();
+    if (options.frameStyle === 'gold_card' || options.frameStyle === 'card') {
+      // Dark background fill
+      ctx.fillStyle = '#0f1115';
+      ctx.fillRect(0, 0, W, H);
+
+      const cardMargin = Math.round(W * 0.04);
+      const cardW = W - cardMargin * 2;
+      const cardH = cardW;
+      const cardX = cardMargin;
+      const cardY = cardMargin;
+      const cardRadius = Math.round(W * 0.05);
+
+      // White inner card box
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardRadius);
+      ctx.fill();
+
+      // Gold border
+      const goldColor = options.frameColor || '#d4af37';
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = Math.max(2, Math.round(W * 0.005));
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardRadius);
+      ctx.stroke();
+
+      // Bottom Name Label
+      const nameText = (options.frameText || 'GHANSHYAM DOBARIYA').toUpperCase();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.round(W * 0.052)}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const textY = cardY + cardH + (H - (cardY + cardH)) * 0.42;
+      ctx.fillText(nameText, W / 2, textY);
+
+      // Gold Underline
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = Math.max(2, Math.round(W * 0.004));
+      const textWidth = ctx.measureText(nameText).width;
+      const lineW = Math.max(textWidth * 0.85, Math.round(W * 0.35));
+      const lineY = textY + Math.round(W * 0.042);
+      ctx.beginPath();
+      ctx.moveTo((W - lineW) / 2, lineY);
+      ctx.lineTo((W + lineW) / 2, lineY);
+      ctx.stroke();
+
+      const qrPad = Math.round(cardW * 0.05);
+      qrAreaX = cardX + qrPad;
+      qrAreaY = cardY + qrPad;
+      qrArea  = cardW - qrPad * 2;
+    } else {
+      ctx.fillStyle = options.colorLight;
+      ctx.fillRect(0, 0, W, H);
+
+      if (options.frameStyle !== 'none') {
         ctx.fillStyle = options.frameColor;
-        ctx.font = 'bold 16px "Outfit", sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(options.frameText.toUpperCase(), W / 2, H - 25);
+        if (options.frameStyle === 'scan_me') {
+          ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.fill();
+          ctx.fillStyle = options.colorLight;
+          ctx.beginPath(); ctx.roundRect(20, 20, W - 40, options.size - 20, 12); ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 18px "Outfit", sans-serif';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(options.frameText.toUpperCase(), W / 2, H - 30);
+        } else if (options.frameStyle === 'wifi') {
+          ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.fill();
+          ctx.fillStyle = options.colorLight;
+          ctx.beginPath(); ctx.roundRect(20, 60, W - 40, options.size - 20, 12); ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 18px "Outfit", sans-serif';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(options.frameText.toUpperCase(), W / 2, 35);
+        } else if (options.frameStyle === 'simple') {
+          ctx.strokeStyle = options.frameColor; ctx.lineWidth = 6;
+          ctx.beginPath(); ctx.roundRect(10, 10, W - 20, H - 20, 16); ctx.stroke();
+          ctx.fillStyle = options.frameColor;
+          ctx.font = 'bold 16px "Outfit", sans-serif';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(options.frameText.toUpperCase(), W / 2, H - 25);
+        }
       }
     }
 
     // --- QR Drawing Area (4-module quiet zone) ---
-    const margin   = 24;
-    const qrAreaX  = margin;
-    const qrAreaY  = margin + topPad;
-    const qrArea   = W - margin * 2;
     const cellSize = qrArea / moduleCount;
 
     // Gradient or solid fill
@@ -180,7 +233,7 @@ window.QREngine = {
       ctx.fill();
 
       // White inner cutout
-      ctx.fillStyle = options.colorLight;
+      ctx.fillStyle = options.colorLight || '#ffffff';
       ctx.beginPath();
       if (options.eyeStyle === 'circle') {
         ctx.arc(ex + eS / 2, ey + eS / 2, iS / 2, 0, Math.PI * 2);
@@ -203,18 +256,18 @@ window.QREngine = {
     });
 
     // --- Center Logo Overlay ---
-    if (options.logoIcon) {
-      const ls = qrArea * 0.20;                        // 20% of QR area
-      const lx = qrAreaX + (qrArea - ls) / 2;
-      const ly = qrAreaY + (qrArea - ls) / 2;
-
-      // White backing
-      ctx.fillStyle = options.colorLight;
-      ctx.beginPath();
-      ctx.arc(lx + ls / 2, ly + ls / 2, ls / 2 + 5, 0, Math.PI * 2);
-      ctx.fill();
-
+    if (options.logoIcon && options.logoIcon !== 'none') {
       if (this.ICONS[options.logoIcon]) {
+        const ls = qrArea * 0.20;                        // 20% of QR area
+        const lx = qrAreaX + (qrArea - ls) / 2;
+        const ly = qrAreaY + (qrArea - ls) / 2;
+
+        // White backing
+        ctx.fillStyle = options.colorLight || '#ffffff';
+        ctx.beginPath();
+        ctx.arc(lx + ls / 2, ly + ls / 2, ls / 2 + 5, 0, Math.PI * 2);
+        ctx.fill();
+
         const p = new Path2D(this.ICONS[options.logoIcon]);
         ctx.save();
         ctx.translate(lx + 4, ly + 4);
@@ -222,10 +275,45 @@ window.QREngine = {
         ctx.fillStyle = options.colorDark;
         ctx.fill(p);
         ctx.restore();
-      } else if (options.logoIcon.startsWith('data:image')) {
-        const img = new Image();
-        img.onload = () => ctx.drawImage(img, lx, ly, ls, ls);
-        img.src = options.logoIcon;
+      } else {
+        if (!this._imgCache) this._imgCache = {};
+        const logoSrc = options.logoIcon;
+
+        const drawLogoImg = (img) => {
+          const aspect = (img.width && img.height) ? (img.width / img.height) : 1.75;
+          let lw = qrArea * 0.28;
+          let lh = lw / aspect;
+          if (lh > qrArea * 0.22) {
+            lh = qrArea * 0.22;
+            lw = lh * aspect;
+          }
+          const lx = qrAreaX + (qrArea - lw) / 2;
+          const ly = qrAreaY + (qrArea - lh) / 2;
+          const pad = Math.max(4, Math.round(qrArea * 0.015));
+
+          ctx.fillStyle = options.colorLight || '#ffffff';
+          ctx.beginPath();
+          ctx.roundRect(lx - pad, ly - pad, lw + pad * 2, lh + pad * 2, pad * 1.5);
+          ctx.fill();
+
+          ctx.strokeStyle = options.frameColor || '#d4af37';
+          ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.005));
+          ctx.stroke();
+
+          ctx.drawImage(img, lx, ly, lw, lh);
+        };
+
+        if (this._imgCache[logoSrc]) {
+          drawLogoImg(this._imgCache[logoSrc]);
+        } else {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = () => {
+            this._imgCache[logoSrc] = img;
+            drawLogoImg(img);
+          };
+          img.src = logoSrc;
+        }
       }
     }
   },

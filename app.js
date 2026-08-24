@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">WhatsApp Number</label>
-            <input type="tel" id="vWhatsapp" class="form-control" placeholder="+1234567890" value="">
+            <input type="tel" id="vWhatsapp" class="form-control" placeholder="+91 9909143742" value="">
           </div>
           <div class="form-group">
             <label class="form-label">Facebook URL</label>
@@ -791,6 +791,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function formatWhatsappDisplay(val) {
+    if (!val) return '';
+    let raw = val.replace('https://wa.me/', '').trim();
+    let digits = raw.replace(/\D/g, '');
+    if (digits.length === 10) {
+      return '+91 ' + digits;
+    }
+    if (digits.length === 12 && digits.startsWith('91')) {
+      return '+91 ' + digits.substring(2);
+    }
+    return raw;
+  }
+
   // Modal Handlers — Smart edit that handles both URL and vCard types
   function openEditModal(id, currentPayload) {
     document.getElementById('editQrId').value = id;
@@ -864,7 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">WhatsApp Number</label>
-            <input id="ef_wa" class="form-control" value="${escapeHtml(wa.replace('https://wa.me/', ''))}">
+            <input id="ef_wa" class="form-control" value="${escapeHtml(formatWhatsappDisplay(wa))}">
           </div>
           <div class="form-group">
             <label class="form-label">Facebook URL</label>

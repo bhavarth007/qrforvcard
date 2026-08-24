@@ -282,25 +282,25 @@ window.QREngine = {
       mainText = mainText.toUpperCase();
       subText = subText.toUpperCase();
 
-      const bw = Math.round(qrArea * 0.44);
-      const bh = Math.round(qrArea * 0.20);
+      const bw = Math.round(qrArea * 0.50);
+      const bh = Math.round(qrArea * 0.22);
       const bx = qrAreaX + (qrArea - bw) / 2;
       const by = qrAreaY + (qrArea - bh) / 2;
       const pad = Math.max(3, Math.round(qrArea * 0.012));
 
-      // Light backing to clear QR dots underneath
+      // 1. Light backing quiet zone to clear QR dots underneath
       ctx.fillStyle = options.colorLight || '#ffffff';
       ctx.beginPath();
       ctx.roundRect(bx - pad, by - pad, bw + pad * 2, bh + pad * 2, pad * 2);
       ctx.fill();
 
-      // Dark badge container fill
-      ctx.fillStyle = '#0b0f19';
+      // 2. Dark badge container fill (#0a0d14)
+      ctx.fillStyle = '#0a0d14';
       ctx.beginPath();
       ctx.roundRect(bx, by, bw, bh, Math.round(pad * 1.5));
       ctx.fill();
 
-      // Gold border stroke
+      // 3. Gold border stroke
       const borderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
         ? (options.frameColor || '#d4af37')
         : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
@@ -308,37 +308,55 @@ window.QREngine = {
       ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.006));
       ctx.stroke();
 
+      // Maximum text width inside badge (guarantees clear padding on both left & right)
+      const maxTextW = bw - Math.max(20, Math.round(bw * 0.16));
+
       ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
 
       if (subText) {
-        // Main text (Line 1)
-        ctx.fillStyle = '#ffffff';
-        const mainFontSize = Math.round(bh * 0.36);
+        // Line 1: Main Text (SAHJANAND)
+        let mainFontSize = Math.round(bh * 0.36);
         ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
-        ctx.textBaseline = 'top';
-        ctx.fillText(mainText, bx + bw / 2, by + bh * 0.12);
+        let mWidth = ctx.measureText(mainText).width;
+        if (mWidth > maxTextW) {
+          mainFontSize = Math.floor(mainFontSize * (maxTextW / mWidth));
+          ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        }
 
-        // Divider line
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(mainText, bx + bw / 2, by + bh * 0.30);
+
+        // Line 2: Divider
         const lineY = by + bh * 0.54;
         ctx.strokeStyle = borderColor;
         ctx.lineWidth = Math.max(1, Math.round(qrArea * 0.003));
         ctx.beginPath();
-        ctx.moveTo(bx + bw * 0.15, lineY);
-        ctx.lineTo(bx + bw * 0.85, lineY);
+        ctx.moveTo(bx + bw * 0.18, lineY);
+        ctx.lineTo(bx + bw * 0.82, lineY);
         ctx.stroke();
 
-        // Subtext (Line 2)
-        ctx.fillStyle = borderColor;
-        const subFontSize = Math.round(bh * 0.22);
+        // Line 3: Subtext (POLYWEAVES PVT. LTD.)
+        let subFontSize = Math.round(bh * 0.19);
         ctx.font = `600 ${subFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
-        ctx.textBaseline = 'top';
-        ctx.fillText(subText, bx + bw / 2, by + bh * 0.62);
+        let sWidth = ctx.measureText(subText).width;
+        if (sWidth > maxTextW) {
+          subFontSize = Math.floor(subFontSize * (maxTextW / sWidth));
+          ctx.font = `600 ${subFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        }
+
+        ctx.fillStyle = borderColor;
+        ctx.fillText(subText, bx + bw / 2, by + bh * 0.76);
       } else {
-        // Single line text
-        ctx.fillStyle = '#ffffff';
-        const mainFontSize = Math.round(bh * 0.44);
+        let mainFontSize = Math.round(bh * 0.44);
         ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
-        ctx.textBaseline = 'middle';
+        let mWidth = ctx.measureText(mainText).width;
+        if (mWidth > maxTextW) {
+          mainFontSize = Math.floor(mainFontSize * (maxTextW / mWidth));
+          ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        }
+
+        ctx.fillStyle = '#ffffff';
         ctx.fillText(mainText, bx + bw / 2, by + bh / 2);
       }
     } else if (options.logoIcon && options.logoIcon !== 'none') {
@@ -489,8 +507,8 @@ window.QREngine = {
       mainText = mainText.toUpperCase();
       subText = subText.toUpperCase();
 
-      const bw = Math.round(qrArea * 0.44);
-      const bh = Math.round(qrArea * 0.20);
+      const bw = Math.round(qrArea * 0.50);
+      const bh = Math.round(qrArea * 0.22);
       const bx = margin + (qrArea - bw) / 2;
       const by = margin + (qrArea - bh) / 2;
       const pad = Math.max(3, Math.round(qrArea * 0.012));
@@ -498,16 +516,20 @@ window.QREngine = {
         ? (options.frameColor || '#d4af37')
         : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
 
+      const maxTextW = bw - Math.max(20, Math.round(bw * 0.16));
+      let mainFontSize = Math.min(Math.round(bh * 0.36), Math.round(maxTextW / (mainText.length * 0.65)));
+      let subFontSize = Math.min(Math.round(bh * 0.19), Math.round(maxTextW / (subText.length * 0.55)));
+
       parts.push(`<rect x="${bx-pad}" y="${by-pad}" width="${bw+pad*2}" height="${bh+pad*2}" rx="${pad*2}" fill="${options.colorLight}"/>`);
-      parts.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${pad*1.5}" fill="#0b0f19" stroke="${borderColor}" stroke-width="${Math.max(1.5, Math.round(qrArea*0.006))}"/>`);
+      parts.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${pad*1.5}" fill="#0a0d14" stroke="${borderColor}" stroke-width="${Math.max(1.5, Math.round(qrArea*0.006))}"/>`);
 
       if (subText) {
         const lineY = by + bh * 0.54;
-        parts.push(`<line x1="${bx+bw*0.15}" y1="${lineY}" x2="${bx+bw*0.85}" y2="${lineY}" stroke="${borderColor}" stroke-width="1"/>`);
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.38}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${Math.round(bh*0.34)}" text-anchor="middle">${mainText}</text>`);
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.82}" fill="${borderColor}" font-family="'Outfit', sans-serif" font-weight="600" font-size="${Math.round(bh*0.20)}" text-anchor="middle">${subText}</text>`);
+        parts.push(`<line x1="${bx+bw*0.18}" y1="${lineY}" x2="${bx+bw*0.82}" y2="${lineY}" stroke="${borderColor}" stroke-width="1"/>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.36}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.82}" fill="${borderColor}" font-family="'Outfit', sans-serif" font-weight="600" font-size="${subFontSize}" text-anchor="middle">${subText}</text>`);
       } else {
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.62}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${Math.round(bh*0.42)}" text-anchor="middle">${mainText}</text>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.58}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
       }
     }
 

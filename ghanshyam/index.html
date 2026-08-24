@@ -58,6 +58,7 @@
             color: #ffffff;
             box-shadow: 0 0 35px rgba(168, 85, 247, 0.45);
             border: 3px solid rgba(255, 255, 255, 0.2);
+            object-fit: cover;
         }
 
         .profile-name {
@@ -175,37 +176,39 @@
 <body>
 
     <div class="profile-card">
-        <div class="avatar-box">GD</div>
-        <h1 class="profile-name">GHANSHYAM DOBARIYA</h1>
-        <p class="profile-title">MANAGING DIRECTOR</p>
-        <p class="profile-org">Sahjanand Polyweaves Pvt. Ltd.</p>
+        <div id="avatarContainer">
+            <div class="avatar-box">GD</div>
+        </div>
+        <h1 class="profile-name" id="dispName">GHANSHYAM DOBARIYA</h1>
+        <p class="profile-title" id="dispTitle">MANAGING DIRECTOR</p>
+        <p class="profile-org" id="dispOrg">Sahjanand Polyweaves Pvt. Ltd.</p>
 
         <div class="info-list">
-            <a href="tel:9909143742" class="info-item">
+            <a href="tel:+919909143742" class="info-item" id="itemPhone">
                 <div class="info-icon" style="color:#ec4899; background:rgba(236,72,153,0.15);">📞</div>
                 <div>
                     <div class="info-label">MOBILE PHONE</div>
-                    <div class="info-value">9909143742</div>
+                    <div class="info-value" id="valPhone">+919909143742</div>
                 </div>
             </a>
 
-            <div class="info-item">
+            <div class="info-item" id="itemOrg">
                 <div class="info-icon" style="color:#3b82f6; background:rgba(59,130,246,0.15);">🏢</div>
                 <div>
                     <div class="info-label">ORGANIZATION</div>
-                    <div class="info-value">Sahjanand Polyweaves Pvt. Ltd.</div>
+                    <div class="info-value" id="valOrg">Sahjanand Polyweaves Pvt. Ltd.</div>
                 </div>
             </div>
 
-            <a href="https://www.google.com/maps/search/?api=1&query=PLOT+NO.+C1B-4308%2F8%2C+ROAD+NO.+43-B%2C+SACHIN+GIDC%2CSURAT%2CGUJARAT-394230" target="_blank" class="info-item">
+            <a href="https://www.google.com/maps/search/?api=1&query=4308%2F8%2C+ROAD+NO.+43-B%2C+SACHIN+GIDC%2CSURAT%2CGUJARAT-394230%2CINDIA" target="_blank" class="info-item" id="itemAddr">
                 <div class="info-icon" style="color:#ef4444; background:rgba(239,68,68,0.15);">📍</div>
                 <div>
                     <div class="info-label">CORPORATE OFFICE</div>
-                    <div class="info-value">PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230</div>
+                    <div class="info-value" id="valAddr">4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA</div>
                 </div>
             </a>
 
-            <a href="https://wa.me/9909143742" target="_blank" class="info-item">
+            <a href="https://wa.me/919909143742" target="_blank" class="info-item" id="itemWa">
                 <div class="info-icon" style="color:#25D366; background:rgba(37,211,102,0.15);">💬</div>
                 <div>
                     <div class="info-label">WHATSAPP</div>
@@ -220,18 +223,40 @@
     </div>
 
     <script>
+        // Default State
+        var profileData = {
+            fn: "GHANSHYAM DOBARIYA",
+            title: "MANAGING DIRECTOR",
+            org: "Sahjanand Polyweaves Pvt. Ltd.",
+            phone: "+919909143742",
+            addr: "4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA",
+            wa: "919909143742"
+        };
+
+        function formatWhatsappUrl(numStr) {
+            if (!numStr) return "https://wa.me/919909143742";
+            var digits = numStr.replace(/\D/g, '');
+            if (digits.length === 10) {
+                digits = "91" + digits;
+            }
+            return "https://wa.me/" + digits;
+        }
+
+        // Add Contact Download
         document.getElementById('btnDownloadVCF').addEventListener('click', function() {
+            var phoneVal = profileData.phone.replace(/[^0-9+]/g, '');
+            var waVal = formatWhatsappUrl(profileData.wa);
             var vcardData = [
                 "BEGIN:VCARD",
                 "VERSION:3.0",
-                "N:;GHANSHYAM DOBARIYA;;;",
-                "FN:GHANSHYAM DOBARIYA",
-                "ORG:Sahjanand Polyweaves Pvt. Ltd.",
-                "TITLE:MANAGING DIRECTOR",
-                "TEL;TYPE=CELL:9909143742",
+                "N:;" + profileData.fn + ";;;",
+                "FN:" + profileData.fn,
+                "ORG:" + profileData.org,
+                "TITLE:" + profileData.title,
+                "TEL;TYPE=CELL:" + phoneVal,
                 "EMAIL:",
-                "ADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;",
-                "URL;TYPE=WhatsApp:https://wa.me/9909143742",
+                "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
+                "URL;TYPE=WhatsApp:" + waVal,
                 "END:VCARD"
             ].join("\r\n");
 
@@ -239,12 +264,68 @@
             var url = URL.createObjectURL(blob);
             var link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', "ghanshyam_dobariya.vcf");
+            link.setAttribute('download', profileData.fn.toLowerCase().replace(/\s+/g, '_') + ".vcf");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         });
+
+        // Live Sync with Render backend (if available)
+        (function syncFromRenderBackend() {
+            var renderApiUrl = "https://qrforvcard.onrender.com/api/qrcodes";
+            fetch(renderApiUrl, { mode: 'cors' })
+                .then(function(res) { return res.json(); })
+                .then(function(qrcodes) {
+                    var target = qrcodes.find(function(q) {
+                        return q.shortCode === "ghanshyam" || q.id === "qr-seed-1" || q.shortCode === "ghanshyam-card";
+                    });
+                    if (target && target.destinationUrl) {
+                        parseAndApplyVCard(target.destinationUrl);
+                    }
+                })
+                .catch(function(e) {
+                    // Silently keep instant default state
+                });
+        })();
+
+        function parseAndApplyVCard(rawVcard) {
+            if (!rawVcard || !rawVcard.includes("VCARD")) return;
+
+            var fnMatch = rawVcard.match(/FN:(.*)/i);
+            if (fnMatch) profileData.fn = fnMatch[1].trim();
+
+            var titleMatch = rawVcard.match(/TITLE:(.*)/i);
+            if (titleMatch) profileData.title = titleMatch[1].trim();
+
+            var orgMatch = rawVcard.match(/ORG:(.*)/i);
+            if (orgMatch) profileData.org = orgMatch[1].trim();
+
+            var phoneMatch = rawVcard.match(/TEL[^:]*:(.*)/i);
+            if (phoneMatch) {
+                var p = phoneMatch[1].trim();
+                var pDigits = p.replace(/\D/g, '');
+                if (pDigits.length === 10) p = "+91" + pDigits;
+                profileData.phone = p;
+            }
+
+            var addrMatch = rawVcard.match(/ADR;TYPE=WORK:;;?([^;\r\n]+)/i);
+            if (addrMatch) profileData.addr = addrMatch[1].replace(/;/g, ' ').trim();
+
+            var waMatch = rawVcard.match(/URL;TYPE=WhatsApp:(.*)/i);
+            if (waMatch) profileData.wa = waMatch[1].trim();
+
+            // Update DOM Elements
+            document.getElementById('dispName').textContent = profileData.fn;
+            document.getElementById('dispTitle').textContent = profileData.title;
+            document.getElementById('dispOrg').textContent = profileData.org;
+            document.getElementById('valPhone').textContent = profileData.phone;
+            document.getElementById('itemPhone').href = "tel:" + profileData.phone;
+            document.getElementById('valOrg').textContent = profileData.org;
+            document.getElementById('valAddr').textContent = profileData.addr;
+            document.getElementById('itemAddr').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(profileData.addr);
+            document.getElementById('itemWa').href = formatWhatsappUrl(profileData.wa);
+        }
     </script>
 </body>
 </html>

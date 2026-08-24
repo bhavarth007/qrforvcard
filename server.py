@@ -34,7 +34,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "ghanshyam",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-05T12:45:50.000791",
             "updatedAt": "2026-08-05T12:46:46.409094",
@@ -299,7 +299,11 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         
     wa = re.search(r'URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
     if wa:
-        info["wa"] = wa.group(1).strip()
+        wa_val = wa.group(1).strip()
+        digits = re.sub(r'\D', '', wa_val)
+        if len(digits) == 10:
+            digits = '91' + digits
+        info["wa"] = f"https://wa.me/{digits}" if digits else wa_val
         
     fb = re.search(r'URL;TYPE=Facebook:(.*)', raw_vcard, re.IGNORECASE)
     if fb:

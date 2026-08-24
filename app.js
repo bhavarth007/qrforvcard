@@ -390,7 +390,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addr2) adrStr += `\r\nADR;TYPE=HOME:;;${addr2};;;;`;
 
     let customUrls = '';
-    if (whatsapp) customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`;
+    if (whatsapp) {
+      let waNum = whatsapp.replace(/[^0-9]/g, '');
+      if (waNum.length === 10) waNum = '91' + waNum;
+      customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${waNum}`;
+    }
     if (facebook) customUrls += `\r\nURL;TYPE=Facebook:${facebook}`;
     if (catalog) customUrls += `\r\nURL;TYPE=Catalog:${catalog}`;
     if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;

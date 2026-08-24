@@ -282,8 +282,8 @@ window.QREngine = {
       mainText = mainText.toUpperCase();
       subText = subText.toUpperCase();
 
-      const bw = Math.round(qrArea * 0.50);
-      const bh = Math.round(qrArea * 0.22);
+      const bw = Math.round(qrArea * 0.52);
+      const bh = Math.round(qrArea * 0.23);
       const bx = qrAreaX + (qrArea - bw) / 2;
       const by = qrAreaY + (qrArea - bh) / 2;
       const pad = Math.max(3, Math.round(qrArea * 0.012));
@@ -294,66 +294,116 @@ window.QREngine = {
       ctx.roundRect(bx - pad, by - pad, bw + pad * 2, bh + pad * 2, pad * 2);
       ctx.fill();
 
-      // 2. Dark badge container fill (#0a0d14)
-      ctx.fillStyle = '#0a0d14';
+      // 2. 3D Metallic Dark Gradient Box Background
+      const boxGrad = ctx.createLinearGradient(bx, by, bx, by + bh);
+      boxGrad.addColorStop(0, '#131824');
+      boxGrad.addColorStop(0.5, '#0a0d14');
+      boxGrad.addColorStop(1, '#040609');
+      ctx.fillStyle = boxGrad;
       ctx.beginPath();
-      ctx.roundRect(bx, by, bw, bh, Math.round(pad * 1.5));
+      ctx.roundRect(bx, by, bw, bh, Math.round(pad * 1.6));
       ctx.fill();
 
-      // 3. Gold border stroke
-      const borderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
+      // 3. Main Gold Border Stroke
+      const goldColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
         ? (options.frameColor || '#d4af37')
-        : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
-      ctx.strokeStyle = borderColor;
-      ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.006));
+        : (options.gradient ? (options.gradientColor || '#f97316') : '#d4af37');
+
+      ctx.strokeStyle = goldColor;
+      ctx.lineWidth = Math.max(1.8, Math.round(qrArea * 0.006));
       ctx.stroke();
 
-      // Maximum text width inside badge (guarantees clear padding on both left & right)
-      const maxTextW = bw - Math.max(20, Math.round(bw * 0.16));
+      // 4. Subtle Inner Inset Border Frame
+      const inset = Math.max(2.5, Math.round(qrArea * 0.007));
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(bx + inset, by + inset, bw - inset * 2, bh - inset * 2, Math.round(pad));
+      ctx.stroke();
+
+      // Maximum text width allowed inside badge (leaving safe margins)
+      const maxTextW = bw - Math.max(24, Math.round(bw * 0.20));
 
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
       if (subText) {
-        // Line 1: Main Text (SAHJANAND)
-        let mainFontSize = Math.round(bh * 0.36);
-        ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        // --- Line 1: Main Text (SAHJANAND) in Metallic White-Silver Gradient ---
+        let mainFontSize = Math.round(bh * 0.38);
+        ctx.font = `900 ${mainFontSize}px "Orbitron", "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
         let mWidth = ctx.measureText(mainText).width;
         if (mWidth > maxTextW) {
           mainFontSize = Math.floor(mainFontSize * (maxTextW / mWidth));
-          ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+          ctx.font = `900 ${mainFontSize}px "Orbitron", "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
         }
 
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(mainText, bx + bw / 2, by + bh * 0.30);
+        const textGrad = ctx.createLinearGradient(bx, by + bh * 0.10, bx, by + bh * 0.45);
+        textGrad.addColorStop(0, '#ffffff');
+        textGrad.addColorStop(0.7, '#f1f5f9');
+        textGrad.addColorStop(1, '#cbd5e1');
+        ctx.fillStyle = textGrad;
+        ctx.fillText(mainText, bx + bw / 2, by + bh * 0.32);
 
-        // Line 2: Divider
-        const lineY = by + bh * 0.54;
-        ctx.strokeStyle = borderColor;
-        ctx.lineWidth = Math.max(1, Math.round(qrArea * 0.003));
-        ctx.beginPath();
-        ctx.moveTo(bx + bw * 0.18, lineY);
-        ctx.lineTo(bx + bw * 0.82, lineY);
-        ctx.stroke();
-
-        // Line 3: Subtext (POLYWEAVES PVT. LTD.)
-        let subFontSize = Math.round(bh * 0.19);
-        ctx.font = `600 ${subFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        // --- Line 2: Subtext (POLYWEAVES PVT. LTD.) with Gold Side Wings ---
+        let subFontSize = Math.round(bh * 0.18);
+        ctx.font = `700 ${subFontSize}px "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
         let sWidth = ctx.measureText(subText).width;
-        if (sWidth > maxTextW) {
-          subFontSize = Math.floor(subFontSize * (maxTextW / sWidth));
-          ctx.font = `600 ${subFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+
+        const maxSubW = bw - Math.max(36, Math.round(bw * 0.32));
+        if (sWidth > maxSubW) {
+          subFontSize = Math.floor(subFontSize * (maxSubW / sWidth));
+          ctx.font = `700 ${subFontSize}px "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
+          sWidth = ctx.measureText(subText).width;
         }
 
-        ctx.fillStyle = borderColor;
-        ctx.fillText(subText, bx + bw / 2, by + bh * 0.76);
+        const subY = by + bh * 0.74;
+
+        // Render Subtext in Gold
+        ctx.fillStyle = goldColor;
+        ctx.fillText(subText, bx + bw / 2, subY);
+
+        // Render Left & Right Golden Side-Wing Lines (matching MEERA GROUP)
+        const lineGap = Math.max(8, Math.round(bw * 0.04));
+        const leftX2  = (bx + bw / 2) - (sWidth / 2) - lineGap;
+        const leftX1  = bx + Math.max(12, Math.round(bw * 0.08));
+
+        const rightX1 = (bx + bw / 2) + (sWidth / 2) + lineGap;
+        const rightX2 = (bx + bw) - Math.max(12, Math.round(bw * 0.08));
+
+        if (leftX2 > leftX1 + 10) {
+          ctx.strokeStyle = goldColor;
+          ctx.lineWidth = Math.max(1, Math.round(qrArea * 0.003));
+
+          // Left Wing Line
+          ctx.beginPath();
+          ctx.moveTo(leftX1, subY);
+          ctx.lineTo(leftX2, subY);
+          ctx.stroke();
+
+          // Left Diamond Dot
+          ctx.fillStyle = goldColor;
+          ctx.beginPath();
+          ctx.arc(leftX2, subY, Math.max(1.8, Math.round(qrArea * 0.004)), 0, Math.PI * 2);
+          ctx.fill();
+
+          // Right Wing Line
+          ctx.beginPath();
+          ctx.moveTo(rightX1, subY);
+          ctx.lineTo(rightX2, subY);
+          ctx.stroke();
+
+          // Right Diamond Dot
+          ctx.beginPath();
+          ctx.arc(rightX1, subY, Math.max(1.8, Math.round(qrArea * 0.004)), 0, Math.PI * 2);
+          ctx.fill();
+        }
       } else {
         let mainFontSize = Math.round(bh * 0.44);
-        ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        ctx.font = `900 ${mainFontSize}px "Orbitron", "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
         let mWidth = ctx.measureText(mainText).width;
         if (mWidth > maxTextW) {
           mainFontSize = Math.floor(mainFontSize * (maxTextW / mWidth));
-          ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+          ctx.font = `900 ${mainFontSize}px "Orbitron", "Outfit", "Rajdhani", "Plus Jakarta Sans", sans-serif`;
         }
 
         ctx.fillStyle = '#ffffff';
@@ -507,29 +557,42 @@ window.QREngine = {
       mainText = mainText.toUpperCase();
       subText = subText.toUpperCase();
 
-      const bw = Math.round(qrArea * 0.50);
-      const bh = Math.round(qrArea * 0.22);
+      const bw = Math.round(qrArea * 0.52);
+      const bh = Math.round(qrArea * 0.23);
       const bx = margin + (qrArea - bw) / 2;
       const by = margin + (qrArea - bh) / 2;
       const pad = Math.max(3, Math.round(qrArea * 0.012));
-      const borderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
+      const goldColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
         ? (options.frameColor || '#d4af37')
-        : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
+        : (options.gradient ? (options.gradientColor || '#f97316') : '#d4af37');
 
-      const maxTextW = bw - Math.max(20, Math.round(bw * 0.16));
-      let mainFontSize = Math.min(Math.round(bh * 0.36), Math.round(maxTextW / (mainText.length * 0.65)));
-      let subFontSize = Math.min(Math.round(bh * 0.19), Math.round(maxTextW / (subText.length * 0.55)));
+      const maxTextW = bw - Math.max(24, Math.round(bw * 0.20));
+      let mainFontSize = Math.min(Math.round(bh * 0.38), Math.round(maxTextW / (mainText.length * 0.65)));
+      let subFontSize = Math.min(Math.round(bh * 0.18), Math.round((bw * 0.55) / (subText.length * 0.55)));
 
       parts.push(`<rect x="${bx-pad}" y="${by-pad}" width="${bw+pad*2}" height="${bh+pad*2}" rx="${pad*2}" fill="${options.colorLight}"/>`);
-      parts.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${pad*1.5}" fill="#0a0d14" stroke="${borderColor}" stroke-width="${Math.max(1.5, Math.round(qrArea*0.006))}"/>`);
+      parts.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${pad*1.5}" fill="#0a0d14" stroke="${goldColor}" stroke-width="${Math.max(1.8, Math.round(qrArea*0.006))}"/>`);
+      const inset = Math.max(2.5, Math.round(qrArea * 0.007));
+      parts.push(`<rect x="${bx+inset}" y="${by+inset}" width="${bw-inset*2}" height="${bh-inset*2}" rx="${pad}" fill="none" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>`);
 
       if (subText) {
-        const lineY = by + bh * 0.54;
-        parts.push(`<line x1="${bx+bw*0.18}" y1="${lineY}" x2="${bx+bw*0.82}" y2="${lineY}" stroke="${borderColor}" stroke-width="1"/>`);
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.36}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.82}" fill="${borderColor}" font-family="'Outfit', sans-serif" font-weight="600" font-size="${subFontSize}" text-anchor="middle">${subText}</text>`);
+        const subY = by + bh * 0.78;
+        const lineX1 = bx + Math.max(12, Math.round(bw * 0.08));
+        const lineX2 = (bx + bw / 2) - Math.round(subText.length * subFontSize * 0.32) - 8;
+        const lineX3 = (bx + bw / 2) + Math.round(subText.length * subFontSize * 0.32) + 8;
+        const lineX4 = (bx + bw) - Math.max(12, Math.round(bw * 0.08));
+
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.38}" fill="#ffffff" font-family="'Orbitron', 'Outfit', sans-serif" font-weight="900" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
+        parts.push(`<text x="${bx+bw/2}" y="${subY}" fill="${goldColor}" font-family="'Outfit', sans-serif" font-weight="700" font-size="${subFontSize}" text-anchor="middle">${subText}</text>`);
+
+        if (lineX2 > lineX1 + 10) {
+          parts.push(`<line x1="${lineX1}" y1="${subY-3}" x2="${lineX2}" y2="${subY-3}" stroke="${goldColor}" stroke-width="1"/>`);
+          parts.push(`<circle cx="${lineX2}" cy="${subY-3}" r="2" fill="${goldColor}"/>`);
+          parts.push(`<line x1="${lineX3}" y1="${subY-3}" x2="${lineX4}" y2="${subY-3}" stroke="${goldColor}" stroke-width="1"/>`);
+          parts.push(`<circle cx="${lineX3}" cy="${subY-3}" r="2" fill="${goldColor}"/>`);
+        }
       } else {
-        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.58}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.58}" fill="#ffffff" font-family="'Orbitron', 'Outfit', sans-serif" font-weight="900" font-size="${mainFontSize}" text-anchor="middle">${mainText}</text>`);
       }
     }
 

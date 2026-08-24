@@ -175,7 +175,8 @@ function initializeSeedData() {
             "bodyStyle": "square",
             "eyeStyle": "square",
             "eyeBallStyle": "square",
-            "logoIcon": "/logo.png",
+            "logoIcon": "none",
+            "logoText": "Sahjanand Polyweaves Pvt. Ltd.",
             "frameStyle": "gold_card",
             "frameText": "GHANSHYAM DOBARIYA",
             "frameColor": "#d4af37"

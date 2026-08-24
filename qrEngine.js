@@ -52,7 +52,8 @@ window.QREngine = {
 
     let qr;
     try {
-      qr = this._buildMatrix(text, !!options.logoIcon);
+      const hasOverlay = !!((options.logoIcon && options.logoIcon !== 'none') || (options.logoText && options.logoText.trim() !== ''));
+      qr = this._buildMatrix(text, hasOverlay);
     } catch (e) {
       console.error('QR generation failed:', e);
       return;
@@ -255,8 +256,92 @@ window.QREngine = {
       ctx.fill();
     });
 
-    // --- Center Logo Overlay ---
-    if (options.logoIcon) {
+    // --- Center Overlay (Text Badge or Logo Icon) ---
+    const hasTextLogo = options.logoText && options.logoText.trim() !== '' && (options.logoIcon === 'none' || options.logoIcon === 'text' || !options.logoIcon);
+
+    if (hasTextLogo) {
+      const textVal = options.logoText.trim();
+      let mainText = textVal;
+      let subText = '';
+
+      if (textVal.includes('\n')) {
+        const parts = textVal.split('\n');
+        mainText = parts[0].trim();
+        subText = parts.slice(1).join(' ').trim();
+      } else if (textVal.toUpperCase().includes('SAHJANAND POLYWEAVES')) {
+        mainText = 'SAHJANAND';
+        subText = 'POLYWEAVES PVT. LTD.';
+      } else {
+        const words = textVal.split(' ');
+        if (words.length >= 3) {
+          mainText = words[0];
+          subText = words.slice(1).join(' ');
+        }
+      }
+
+      mainText = mainText.toUpperCase();
+      subText = subText.toUpperCase();
+
+      const bw = Math.round(qrArea * 0.44);
+      const bh = Math.round(qrArea * 0.20);
+      const bx = qrAreaX + (qrArea - bw) / 2;
+      const by = qrAreaY + (qrArea - bh) / 2;
+      const pad = Math.max(3, Math.round(qrArea * 0.012));
+
+      // Light backing to clear QR dots underneath
+      ctx.fillStyle = options.colorLight || '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(bx - pad, by - pad, bw + pad * 2, bh + pad * 2, pad * 2);
+      ctx.fill();
+
+      // Dark badge container fill
+      ctx.fillStyle = '#0b0f19';
+      ctx.beginPath();
+      ctx.roundRect(bx, by, bw, bh, Math.round(pad * 1.5));
+      ctx.fill();
+
+      // Gold border stroke
+      const borderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
+        ? (options.frameColor || '#d4af37')
+        : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.006));
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+
+      if (subText) {
+        // Main text (Line 1)
+        ctx.fillStyle = '#ffffff';
+        const mainFontSize = Math.round(bh * 0.36);
+        ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        ctx.textBaseline = 'top';
+        ctx.fillText(mainText, bx + bw / 2, by + bh * 0.12);
+
+        // Divider line
+        const lineY = by + bh * 0.54;
+        ctx.strokeStyle = borderColor;
+        ctx.lineWidth = Math.max(1, Math.round(qrArea * 0.003));
+        ctx.beginPath();
+        ctx.moveTo(bx + bw * 0.15, lineY);
+        ctx.lineTo(bx + bw * 0.85, lineY);
+        ctx.stroke();
+
+        // Subtext (Line 2)
+        ctx.fillStyle = borderColor;
+        const subFontSize = Math.round(bh * 0.22);
+        ctx.font = `600 ${subFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        ctx.textBaseline = 'top';
+        ctx.fillText(subText, bx + bw / 2, by + bh * 0.62);
+      } else {
+        // Single line text
+        ctx.fillStyle = '#ffffff';
+        const mainFontSize = Math.round(bh * 0.44);
+        ctx.font = `800 ${mainFontSize}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+        ctx.textBaseline = 'middle';
+        ctx.fillText(mainText, bx + bw / 2, by + bh / 2);
+      }
+    } else if (options.logoIcon && options.logoIcon !== 'none') {
       const ls = qrArea * 0.20;                        // 20% of QR area
       const lx = qrAreaX + (qrArea - ls) / 2;
       const ly = qrAreaY + (qrArea - ls) / 2;
@@ -267,57 +352,55 @@ window.QREngine = {
       ctx.arc(lx + ls / 2, ly + ls / 2, ls / 2 + 5, 0, Math.PI * 2);
       ctx.fill();
 
-      if (options.logoIcon !== 'none') {
-        if (this.ICONS[options.logoIcon]) {
-          const p = new Path2D(this.ICONS[options.logoIcon]);
-          ctx.save();
-          ctx.translate(lx + 4, ly + 4);
-          ctx.scale((ls - 8) / 24, (ls - 8) / 24);
-          ctx.fillStyle = options.colorDark;
-          ctx.fill(p);
-          ctx.restore();
-        } else {
-          if (!this._imgCache) this._imgCache = {};
-          const logoSrc = options.logoIcon;
+      if (this.ICONS[options.logoIcon]) {
+        const p = new Path2D(this.ICONS[options.logoIcon]);
+        ctx.save();
+        ctx.translate(lx + 4, ly + 4);
+        ctx.scale((ls - 8) / 24, (ls - 8) / 24);
+        ctx.fillStyle = options.colorDark;
+        ctx.fill(p);
+        ctx.restore();
+      } else {
+        if (!this._imgCache) this._imgCache = {};
+        const logoSrc = options.logoIcon;
 
-          const drawLogoImg = (img) => {
-            const aspect = (img.width && img.height) ? (img.width / img.height) : 1.75;
-            let lw = qrArea * 0.28;
-            let lh = lw / aspect;
-            if (lh > qrArea * 0.22) {
-              lh = qrArea * 0.22;
-              lw = lh * aspect;
-            }
-            const lx = qrAreaX + (qrArea - lw) / 2;
-            const ly = qrAreaY + (qrArea - lh) / 2;
-            const pad = Math.max(4, Math.round(qrArea * 0.015));
-
-            ctx.fillStyle = options.colorLight || '#ffffff';
-            ctx.beginPath();
-            ctx.roundRect(lx - pad, ly - pad, lw + pad * 2, lh + pad * 2, pad * 1.5);
-            ctx.fill();
-
-            const logoBorderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card') 
-              ? (options.frameColor || '#d4af37') 
-              : (options.gradient ? (options.gradientColor || '#f97316') : (options.frameColor && options.frameColor !== '#000000' ? options.frameColor : '#ffffff'));
-            ctx.strokeStyle = logoBorderColor;
-            ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.005));
-            ctx.stroke();
-
-            ctx.drawImage(img, lx, ly, lw, lh);
-          };
-
-          if (this._imgCache[logoSrc]) {
-            drawLogoImg(this._imgCache[logoSrc]);
-          } else {
-            const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.onload = () => {
-              this._imgCache[logoSrc] = img;
-              drawLogoImg(img);
-            };
-            img.src = logoSrc;
+        const drawLogoImg = (img) => {
+          const aspect = (img.width && img.height) ? (img.width / img.height) : 1.75;
+          let lw = qrArea * 0.28;
+          let lh = lw / aspect;
+          if (lh > qrArea * 0.22) {
+            lh = qrArea * 0.22;
+            lw = lh * aspect;
           }
+          const lx = qrAreaX + (qrArea - lw) / 2;
+          const ly = qrAreaY + (qrArea - lh) / 2;
+          const pad = Math.max(4, Math.round(qrArea * 0.015));
+
+          ctx.fillStyle = options.colorLight || '#ffffff';
+          ctx.beginPath();
+          ctx.roundRect(lx - pad, ly - pad, lw + pad * 2, lh + pad * 2, pad * 1.5);
+          ctx.fill();
+
+          const logoBorderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card') 
+            ? (options.frameColor || '#d4af37') 
+            : (options.gradient ? (options.gradientColor || '#f97316') : (options.frameColor && options.frameColor !== '#000000' ? options.frameColor : '#ffffff'));
+          ctx.strokeStyle = logoBorderColor;
+          ctx.lineWidth = Math.max(1.5, Math.round(qrArea * 0.005));
+          ctx.stroke();
+
+          ctx.drawImage(img, lx, ly, lw, lh);
+        };
+
+        if (this._imgCache[logoSrc]) {
+          drawLogoImg(this._imgCache[logoSrc]);
+        } else {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = () => {
+            this._imgCache[logoSrc] = img;
+            drawLogoImg(img);
+          };
+          img.src = logoSrc;
         }
       }
     }
@@ -333,12 +416,15 @@ window.QREngine = {
       colorLight: '#ffffff',
       bodyStyle: 'square',
       eyeStyle: 'square',
-      eyeBallStyle: 'square'
+      eyeBallStyle: 'square',
+      logoIcon: null,
+      logoText: ''
     }, options);
 
     let qr;
     try {
-      qr = this._buildMatrix(text, false);
+      const hasOverlay = !!((options.logoIcon && options.logoIcon !== 'none') || (options.logoText && options.logoText.trim() !== ''));
+      qr = this._buildMatrix(text, hasOverlay);
     } catch (e) {
       console.error('QR SVG generation failed:', e);
       return '';
@@ -385,6 +471,45 @@ window.QREngine = {
       parts.push(`<rect x="${ex+cellSize}" y="${ey+cellSize}" width="${iS}" height="${iS}" fill="${options.colorLight}"/>`);
       parts.push(`<rect x="${ex+cellSize*2}" y="${ey+cellSize*2}" width="${bS}" height="${bS}" fill="${cd}"/>`);
     });
+
+    // SVG Center Overlay (Text Badge)
+    if (options.logoText && options.logoText.trim() !== '' && (options.logoIcon === 'none' || options.logoIcon === 'text' || !options.logoIcon)) {
+      const textVal = options.logoText.trim();
+      let mainText = textVal;
+      let subText = '';
+      if (textVal.includes('\n')) {
+        const p = textVal.split('\n');
+        mainText = p[0].trim(); subText = p.slice(1).join(' ').trim();
+      } else if (textVal.toUpperCase().includes('SAHJANAND POLYWEAVES')) {
+        mainText = 'SAHJANAND'; subText = 'POLYWEAVES PVT. LTD.';
+      } else {
+        const w = textVal.split(' ');
+        if (w.length >= 3) { mainText = w[0]; subText = w.slice(1).join(' '); }
+      }
+      mainText = mainText.toUpperCase();
+      subText = subText.toUpperCase();
+
+      const bw = Math.round(qrArea * 0.44);
+      const bh = Math.round(qrArea * 0.20);
+      const bx = margin + (qrArea - bw) / 2;
+      const by = margin + (qrArea - bh) / 2;
+      const pad = Math.max(3, Math.round(qrArea * 0.012));
+      const borderColor = (options.frameStyle === 'gold_card' || options.frameStyle === 'card')
+        ? (options.frameColor || '#d4af37')
+        : (options.gradient ? (options.gradientColor || '#f97316') : '#ffffff');
+
+      parts.push(`<rect x="${bx-pad}" y="${by-pad}" width="${bw+pad*2}" height="${bh+pad*2}" rx="${pad*2}" fill="${options.colorLight}"/>`);
+      parts.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${pad*1.5}" fill="#0b0f19" stroke="${borderColor}" stroke-width="${Math.max(1.5, Math.round(qrArea*0.006))}"/>`);
+
+      if (subText) {
+        const lineY = by + bh * 0.54;
+        parts.push(`<line x1="${bx+bw*0.15}" y1="${lineY}" x2="${bx+bw*0.85}" y2="${lineY}" stroke="${borderColor}" stroke-width="1"/>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.38}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${Math.round(bh*0.34)}" text-anchor="middle">${mainText}</text>`);
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.82}" fill="${borderColor}" font-family="'Outfit', sans-serif" font-weight="600" font-size="${Math.round(bh*0.20)}" text-anchor="middle">${subText}</text>`);
+      } else {
+        parts.push(`<text x="${bx+bw/2}" y="${by+bh*0.62}" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="800" font-size="${Math.round(bh*0.42)}" text-anchor="middle">${mainText}</text>`);
+      }
+    }
 
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">\n${parts.join('\n')}\n</svg>`;
   }

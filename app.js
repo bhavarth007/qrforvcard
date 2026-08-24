@@ -493,6 +493,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Logo Text Input
+    const logoTextInput = document.getElementById('logoTextInput');
+    if (logoTextInput) {
+      logoTextInput.addEventListener('input', (e) => {
+        qrOptions.logoText = e.target.value;
+        updateLivePreview();
+      });
+    }
+
     // Frame Customizer
     document.getElementById('frameText').addEventListener('input', (e) => {
       qrOptions.frameText = e.target.value || 'SCAN ME';

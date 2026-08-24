@@ -178,7 +178,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "ghanshyam-card",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9909143742\r\nEND:VCARD",
+            "destinationUrl": "https://bhavarth007.github.io/qrforvcard/ghanshyam/",
             "active": True,
             "createdAt": "2026-08-23T16:05:00.000000",
             "updatedAt": "2026-08-23T16:05:00.000000",

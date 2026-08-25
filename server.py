@@ -39,17 +39,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000791",
             "updatedAt": "2026-08-05T12:46:46.409094",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {
@@ -63,17 +63,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000806",
             "updatedAt": "2026-08-05T12:47:36.241835",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {
@@ -87,17 +87,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000811",
             "updatedAt": "2026-08-05T12:48:08.400060",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {
@@ -111,17 +111,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000816",
             "updatedAt": "2026-08-05T12:48:45.134445",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {
@@ -135,17 +135,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000821",
             "updatedAt": "2026-08-05T12:49:29.046378",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {
@@ -159,17 +159,17 @@ DEFAULT_DB = {
             "createdAt": "2026-08-05T12:45:50.000826",
             "updatedAt": "2026-08-05T12:45:56.204808",
             "options": {
-                "colorDark": "#000000",
+                "colorDark": "#4f46e5",
                 "colorLight": "#ffffff",
                 "gradient": True,
-                "gradientColor": "#f97316",
-                "bodyStyle": "square",
-                "eyeStyle": "square",
-                "eyeBallStyle": "square",
-                "logoIcon": "none",
-                "frameStyle": "none",
-                "frameText": "",
-                "frameColor": "#000000"
+                "gradientColor": "#ec4899",
+                "bodyStyle": "rounded",
+                "eyeStyle": "rounded",
+                "eyeBallStyle": "circle",
+                "logoIcon": "user",
+                "frameStyle": "scan_me",
+                "frameText": "SAVE CONTACT",
+                "frameColor": "#4f46e5"
             }
         },
         {

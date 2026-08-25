@@ -821,18 +821,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Detect vCard
     if (qr && qr.type === 'vcard') {
       // Parse current vCard fields
-      const fn    = (currentPayload.match(/FN:(.*)/i)    || [])[1]?.trim() || '';
-      const title = (currentPayload.match(/TITLE:(.*)/i)  || [])[1]?.trim() || '';
-      const org   = (currentPayload.match(/ORG:(.*)/i)    || [])[1]?.trim() || '';
-      const phone = (currentPayload.match(/TEL[^:]*:(.*)/i) || [])[1]?.trim() || '';
-      const email = (currentPayload.match(/EMAIL[^:]*:(.*)/i) || [])[1]?.trim() || '';
-      const photo = (currentPayload.match(/PHOTO;VALUE=URI:(.*)/i) || [])[1]?.trim() || '';
+      const fn    = (currentPayload.match(/^FN:(.*)$/im)    || currentPayload.match(/FN:(.*)/i) || [])[1]?.trim() || '';
+      const title = (currentPayload.match(/^TITLE:(.*)$/im)  || currentPayload.match(/TITLE:(.*)/i) || [])[1]?.trim() || '';
+      const org   = (currentPayload.match(/^ORG:(.*)$/im)    || currentPayload.match(/ORG:(.*)/i) || [])[1]?.trim() || '';
+      const phone = (currentPayload.match(/^TEL[^:]*:(.*)$/im) || currentPayload.match(/TEL[^:]*:(.*)/i) || [])[1]?.trim() || '';
+      const email = (currentPayload.match(/^EMAIL[^:]*:(.*)$/im) || currentPayload.match(/EMAIL[^:]*:(.*)/i) || [])[1]?.trim() || '';
+      const photo = (currentPayload.match(/(?:PHOTO;VALUE=URI|URL;TYPE=Photo):(.*)/i) || [])[1]?.trim() || '';
       
-      const addr1 = (currentPayload.match(/ADR;TYPE=WORK:;;(.*);;;;/i) || [])[1]?.trim() || '';
-      const addr2 = (currentPayload.match(/ADR;TYPE=HOME:;;(.*);;;;/i) || [])[1]?.trim() || '';
-      const wa    = (currentPayload.match(/URL;TYPE=WhatsApp:(.*)/i) || [])[1]?.trim() || '';
-      const fb    = (currentPayload.match(/URL;TYPE=Facebook:(.*)/i) || [])[1]?.trim() || '';
-      const cat   = (currentPayload.match(/URL;TYPE=Catalog:(.*)/i) || [])[1]?.trim() || '';
+      let addr1 = '';
+      const adr1Match = currentPayload.match(/(?:item1\.)?ADR;TYPE=WORK:;;?([^;\r\n]+(?:\;[^;\r\n]+)*)/i) || currentPayload.match(/(?:item1\.)?ADR[^:]*:;*(.*)/i);
+      if (adr1Match) {
+        let rawA1 = adr1Match[1].replace(/;+$/, '').replace(/^;+/, '');
+        addr1 = rawA1.split(';').map(s => s.trim()).filter(Boolean).join(', ');
+      }
+
+      let addr2 = '';
+      const adr2Match = currentPayload.match(/(?:item2\.)ADR[^:]*:;*(.*)/i) || currentPayload.match(/ADR;TYPE=HOME:;;?([^;\r\n]+(?:\;[^;\r\n]+)*)/i);
+      if (adr2Match) {
+        let rawA2 = adr2Match[1].replace(/;+$/, '').replace(/^;+/, '');
+        addr2 = rawA2.split(';').map(s => s.trim()).filter(Boolean).join(', ');
+      }
+
+      let wa = '';
+      const waMatch = currentPayload.match(/https:\/\/wa\.me\/(\d+)/i) || currentPayload.match(/URL;TYPE=WhatsApp:(.*)/i);
+      if (waMatch) {
+        wa = waMatch[1]?.trim() || '';
+      }
+
+      const fb  = (currentPayload.match(/URL;TYPE=Facebook:(.*)/i) || [])[1]?.trim() || '';
+      const cat = (currentPayload.match(/URL;TYPE=Catalog:(.*)/i) || [])[1]?.trim() || '';
 
       document.getElementById('editModalBody').innerHTML = `
         <div style="background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(236,72,153,.08));border:1px solid rgba(79,70,229,.25);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">

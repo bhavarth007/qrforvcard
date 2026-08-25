@@ -214,18 +214,6 @@ def load_db() -> Dict[str, Any]:
                 if idx is None:
                     data.setdefault("qrcodes", []).append(seed)
                     updated = True
-                else:
-                    curr = data["qrcodes"][idx]
-                    curr_url = curr.get("destinationUrl", "")
-                    if seed["id"] == "qr-ghanshyam-card":
-                        data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
-                        data["qrcodes"][idx]["title"] = seed["title"]
-                        data["qrcodes"][idx]["options"] = seed["options"]
-                        updated = True
-                    elif "Sahjanand Pvt. Ltd." in curr_url or "Ghanshayam Synthetic" in curr_url:
-                        data["qrcodes"][idx]["destinationUrl"] = seed["destinationUrl"]
-                        data["qrcodes"][idx]["title"] = seed["title"]
-                        updated = True
             if updated:
                 save_db(data)
             return data
@@ -285,9 +273,11 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
     if email_match:
         info["email"] = email_match.group(1).strip()
         
-    addr_work = re.search(r'(?:item\d+\.)?ADR;TYPE=WORK:(.*)', raw_vcard, re.IGNORECASE)
+    addr_work = re.search(r'(?:item1\.)ADR[^:]*:(.*)', raw_vcard, re.IGNORECASE)
     if not addr_work:
-        addr_work = re.search(r'(?:item\d+\.)?ADR:(.*)', raw_vcard, re.IGNORECASE)
+        addr_work = re.search(r'ADR;TYPE=WORK:(.*)', raw_vcard, re.IGNORECASE)
+    if not addr_work:
+        addr_work = re.search(r'ADR:(.*)', raw_vcard, re.IGNORECASE)
     if addr_work:
         raw_addr = addr_work.group(1).strip()
         raw_addr = re.sub(r'^;+', '', raw_addr)
@@ -295,13 +285,17 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         parts = [p.strip() for p in raw_addr.split(';') if p.strip()]
         info["addr1"] = ", ".join(parts)
 
-    addr_home = re.search(r'(?:item\d+\.)?ADR;TYPE=HOME:(.*)', raw_vcard, re.IGNORECASE)
+    addr_home = re.search(r'(?:item2\.)ADR[^:]*:(.*)', raw_vcard, re.IGNORECASE)
+    if not addr_home:
+        addr_home = re.search(r'ADR;TYPE=HOME:(.*)', raw_vcard, re.IGNORECASE)
     if addr_home:
         raw_addr = addr_home.group(1).strip()
         raw_addr = re.sub(r'^;+', '', raw_addr)
         raw_addr = re.sub(r';+$', '', raw_addr)
         parts = [p.strip() for p in raw_addr.split(';') if p.strip()]
         info["addr2"] = ", ".join(parts)
+    if info["addr1"] and info["addr2"] and info["addr1"] == info["addr2"]:
+        info["addr2"] = ""
         
     wa = re.search(r'(?:item\d+\.)?URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
     if not wa:

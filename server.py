@@ -447,20 +447,9 @@ async def dynamic_redirect(short_code: str, request: Request):
             target_url = "https://" + target_url
         return RedirectResponse(url=target_url, status_code=307)
 
-    # 2. Handle vCard - Directly return raw vCard payload so scanning opens Google Contacts screen instantly!
+    # 2. Handle vCard Mobile User Profile Page
     if qr_type == "vcard" or "VCARD" in destination_url.upper():
         profile = parse_vcard_data(destination_url)
-        fn_slug = profile.get("fn", "contact").lower().replace(" ", "_") or "contact"
-        
-        # If mode=profile is NOT passed, respond directly with vCard to launch native contacts
-        if request.query_params.get("mode") != "profile":
-            return Response(
-                content=destination_url,
-                media_type="text/vcard; charset=utf-8",
-                headers={
-                    "Content-Disposition": f'inline; filename="{fn_slug}.vcf"'
-                }
-            )
         
         # Apply B.S. CHOUHAN Name Formatting Rule (Add dots after single characters)
         formatted_parts = []
@@ -793,10 +782,6 @@ async def dynamic_redirect(short_code: str, request: Request):
                 }}
 
                 document.getElementById('btnDownloadVCF').addEventListener('click', triggerVCardDownload);
-
-                window.addEventListener('DOMContentLoaded', function() {{
-                    setTimeout(triggerVCardDownload, 300);
-                }});
             </script>
         </body>
         </html>

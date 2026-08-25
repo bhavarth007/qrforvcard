@@ -296,11 +296,6 @@
         // Add Contact Download Event Listener
         document.getElementById('btnDownloadVCF').addEventListener('click', downloadVCard);
 
-        // Auto-trigger contact card directly on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(downloadVCard, 300);
-        });
-
         // Live Sync with Render backend (if available)
         (function syncFromRenderBackend() {
             var renderApiUrl = "https://qrforvcard.onrender.com/api/qrcodes";

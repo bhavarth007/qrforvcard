@@ -208,6 +208,14 @@
                 </div>
             </a>
 
+            <a href="https://www.google.com/maps/search/?api=1&query=Plot+No.+A1%2F8%2C+Road+No.+9%2C+Hojiwala+Ind.+Estate%2C+Sachin%2C+Surat%2C+Gujarat+394230%2C+India" target="_blank" class="info-item" id="itemAddr2">
+                <div class="info-icon" style="color:#f59e0b; background:rgba(245,158,11,0.15);">🏭</div>
+                <div>
+                    <div class="info-label">FACTORY LOCATION</div>
+                    <div class="info-value" id="valAddr2">Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate, Sachin, Surat, Gujarat 394230, India</div>
+                </div>
+            </a>
+
             <a href="https://wa.me/919909143742" target="_blank" class="info-item" id="itemWa">
                 <div class="info-icon" style="color:#25D366; background:rgba(37,211,102,0.15);">💬</div>
                 <div>
@@ -229,7 +237,8 @@
             title: "MANAGING DIRECTOR",
             org: "Sahjanand Polyweaves Pvt. Ltd.",
             phone: "+919909143742",
-            addr: "4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA",
+            addr: "4308/8, Road No. 43-B, Sachin GIDC, Surat, Gujarat 394230, India",
+            addr2: "Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate, Sachin, Surat, Gujarat 394230, India",
             wa: "919909143742"
         };
 
@@ -252,7 +261,7 @@
                 var firstName = nameParts.join(' ');
                 nProp = lastName + ";" + firstName + ";;;";
             }
-            var vcardData = [
+            var vcardLines = [
                 "BEGIN:VCARD",
                 "VERSION:3.0",
                 "N:" + nProp,
@@ -261,10 +270,14 @@
                 "TITLE:" + profileData.title,
                 "TEL;TYPE=CELL:" + phoneVal,
                 "EMAIL:",
-                "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
-                "URL;TYPE=WhatsApp:" + waVal,
-                "END:VCARD"
-            ].join("\r\n");
+                "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;"
+            ];
+            if (profileData.addr2) {
+                vcardLines.push("ADR;TYPE=HOME:;;" + profileData.addr2 + ";;;;");
+            }
+            vcardLines.push("URL;TYPE=WhatsApp:" + waVal);
+            vcardLines.push("END:VCARD");
+            var vcardData = vcardLines.join("\r\n");
 
             var blob = new Blob([vcardData], { type: "text/vcard;charset=utf-8;" });
             var url = URL.createObjectURL(blob);
@@ -323,8 +336,19 @@
                 profileData.phone = p;
             }
 
-            var addrMatch = rawVcard.match(/ADR;TYPE=WORK:;;?([^;\r\n]+)/i);
-            if (addrMatch) profileData.addr = addrMatch[1].replace(/;/g, ' ').trim();
+            var addrMatch = rawVcard.match(/ADR;TYPE=WORK:(.*)/i);
+            if (addrMatch) {
+                var rawA = addrMatch[1].trim().replace(/^;+/, '').replace(/;+$/, '');
+                var parts = rawA.split(';').map(function(s) { return s.trim(); }).filter(Boolean);
+                profileData.addr = parts.join(', ');
+            }
+
+            var addr2Match = rawVcard.match(/ADR;TYPE=HOME:(.*)/i);
+            if (addr2Match) {
+                var rawA2 = addr2Match[1].trim().replace(/^;+/, '').replace(/;+$/, '');
+                var parts2 = rawA2.split(';').map(function(s) { return s.trim(); }).filter(Boolean);
+                profileData.addr2 = parts2.join(', ');
+            }
 
             var waMatch = rawVcard.match(/URL;TYPE=WhatsApp:(.*)/i);
             if (waMatch) profileData.wa = waMatch[1].trim();
@@ -338,6 +362,15 @@
             document.getElementById('valOrg').textContent = profileData.org;
             document.getElementById('valAddr').textContent = profileData.addr;
             document.getElementById('itemAddr').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(profileData.addr);
+            if (profileData.addr2) {
+                var itemAddr2 = document.getElementById('itemAddr2');
+                var valAddr2 = document.getElementById('valAddr2');
+                if (valAddr2) valAddr2.textContent = profileData.addr2;
+                if (itemAddr2) {
+                    itemAddr2.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(profileData.addr2);
+                    itemAddr2.style.display = "flex";
+                }
+            }
             document.getElementById('itemWa').href = formatWhatsappUrl(profileData.wa);
         }
     </script>

@@ -242,14 +242,20 @@
             return "https://wa.me/" + digits;
         }
 
-        // Add Contact Download
-        document.getElementById('btnDownloadVCF').addEventListener('click', function() {
+        function downloadVCard() {
             var phoneVal = profileData.phone.replace(/[^0-9+]/g, '');
             var waVal = formatWhatsappUrl(profileData.wa);
+            var nameParts = profileData.fn.trim().split(/\s+/);
+            var nProp = ";" + profileData.fn + ";;;";
+            if (nameParts.length > 1) {
+                var lastName = nameParts.pop();
+                var firstName = nameParts.join(' ');
+                nProp = lastName + ";" + firstName + ";;;";
+            }
             var vcardData = [
                 "BEGIN:VCARD",
                 "VERSION:3.0",
-                "N:;" + profileData.fn + ";;;",
+                "N:" + nProp,
                 "FN:" + profileData.fn,
                 "ORG:" + profileData.org,
                 "TITLE:" + profileData.title,
@@ -269,6 +275,14 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
+        }
+
+        // Add Contact Download Event Listener
+        document.getElementById('btnDownloadVCF').addEventListener('click', downloadVCard);
+
+        // Auto-trigger contact card directly on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(downloadVCard, 300);
         });
 
         // Live Sync with Render backend (if available)

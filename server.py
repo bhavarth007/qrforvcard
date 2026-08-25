@@ -765,7 +765,7 @@ async def dynamic_redirect(short_code: str, request: Request):
                     modal.classList.remove('active');
                 }}
 
-                document.getElementById('btnDownloadVCF').addEventListener('click', function() {{
+                function triggerVCardDownload() {{
                     var vcardData = "{vcard_encoded}".replace(/\\\\n/g, "\\r\\n");
                     var blob = new Blob([vcardData], {{ type: "text/vcard;charset=utf-8;" }});
                     var url = URL.createObjectURL(blob);
@@ -775,6 +775,12 @@ async def dynamic_redirect(short_code: str, request: Request):
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+                }}
+
+                document.getElementById('btnDownloadVCF').addEventListener('click', triggerVCardDownload);
+
+                window.addEventListener('DOMContentLoaded', function() {{
+                    setTimeout(triggerVCardDownload, 300);
                 }});
             </script>
         </body>

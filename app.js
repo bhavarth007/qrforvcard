@@ -386,14 +386,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const photo = document.getElementById('vPhotoUrl')?.value || '';
 
     let adrStr = '';
-    if (addr1) adrStr += `\r\nADR;TYPE=WORK:;;${addr1};;;;`;
-    if (addr2) adrStr += `\r\nADR;TYPE=HOME:;;${addr2};;;;`;
+    if (addr1) adrStr += `\r\nitem1.ADR;TYPE=WORK:;;${addr1};;;;\r\nitem1.X-ABLabel:Address-1`;
+    if (addr2) adrStr += `\r\nitem2.ADR;TYPE=HOME:;;${addr2};;;;\r\nitem2.X-ABLabel:Address-2`;
 
     let customUrls = '';
     if (whatsapp) {
       let waNum = whatsapp.replace(/[^0-9]/g, '');
       if (waNum.length === 10) waNum = '91' + waNum;
-      customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${waNum}`;
+      customUrls += `\r\nitem3.URL:https://wa.me/${waNum}\r\nitem3.X-ABLabel:WhatsApp`;
     }
     if (facebook) customUrls += `\r\nURL;TYPE=Facebook:${facebook}`;
     if (catalog) customUrls += `\r\nURL;TYPE=Catalog:${catalog}`;
@@ -976,11 +976,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const photo = document.getElementById('ef_photoUrl')?.value.trim() || '';
 
       let adrStr = '';
-      if (addr1) adrStr += `\r\nADR;TYPE=WORK:;;${addr1};;;;`;
-      if (addr2) adrStr += `\r\nADR;TYPE=HOME:;;${addr2};;;;`;
+      if (addr1) adrStr += `\r\nitem1.ADR;TYPE=WORK:;;${addr1};;;;\r\nitem1.X-ABLabel:Address-1`;
+      if (addr2) adrStr += `\r\nitem2.ADR;TYPE=HOME:;;${addr2};;;;\r\nitem2.X-ABLabel:Address-2`;
 
       let customUrls = '';
-      if (wa) customUrls += `\r\nURL;TYPE=WhatsApp:https://wa.me/${wa.replace(/[^0-9]/g, '')}`;
+      if (wa) customUrls += `\r\nitem3.URL:https://wa.me/${wa.replace(/[^0-9]/g, '')}\r\nitem3.X-ABLabel:WhatsApp`;
       if (fb) customUrls += `\r\nURL;TYPE=Facebook:${fb}`;
       if (cat) customUrls += `\r\nURL;TYPE=Catalog:${cat}`;
       if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;

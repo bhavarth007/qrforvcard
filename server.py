@@ -34,7 +34,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "ghanshyam",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-05T12:45:50.000791",
             "updatedAt": "2026-08-05T12:46:46.409094",
@@ -178,7 +178,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "ghanshyam-card",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-23T16:05:00.000000",
             "updatedAt": "2026-08-23T16:05:00.000000",
@@ -285,7 +285,9 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
     if email_match:
         info["email"] = email_match.group(1).strip()
         
-    addr_work = re.search(r'ADR;TYPE=WORK:(.*)', raw_vcard, re.IGNORECASE)
+    addr_work = re.search(r'(?:item\d+\.)?ADR;TYPE=WORK:(.*)', raw_vcard, re.IGNORECASE)
+    if not addr_work:
+        addr_work = re.search(r'(?:item\d+\.)?ADR:(.*)', raw_vcard, re.IGNORECASE)
     if addr_work:
         raw_addr = addr_work.group(1).strip()
         raw_addr = re.sub(r'^;+', '', raw_addr)
@@ -293,7 +295,7 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         parts = [p.strip() for p in raw_addr.split(';') if p.strip()]
         info["addr1"] = ", ".join(parts)
 
-    addr_home = re.search(r'ADR;TYPE=HOME:(.*)', raw_vcard, re.IGNORECASE)
+    addr_home = re.search(r'(?:item\d+\.)?ADR;TYPE=HOME:(.*)', raw_vcard, re.IGNORECASE)
     if addr_home:
         raw_addr = addr_home.group(1).strip()
         raw_addr = re.sub(r'^;+', '', raw_addr)
@@ -301,7 +303,9 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         parts = [p.strip() for p in raw_addr.split(';') if p.strip()]
         info["addr2"] = ", ".join(parts)
         
-    wa = re.search(r'URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
+    wa = re.search(r'(?:item\d+\.)?URL;TYPE=WhatsApp:(.*)', raw_vcard, re.IGNORECASE)
+    if not wa:
+        wa = re.search(r'(?:item\d+\.)?URL:(.*wa\.me.*)', raw_vcard, re.IGNORECASE)
     if wa:
         wa_val = wa.group(1).strip()
         digits = re.sub(r'\D', '', wa_val)

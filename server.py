@@ -176,9 +176,9 @@ DEFAULT_DB = {
             "id": "qr-ghanshyam-card",
             "title": "GHANSHYAM DOBARIYA - Sahjanand Gold Card",
             "type": "vcard",
-            "isDynamic": True,
+            "isDynamic": False,
             "shortCode": "ghanshyam-card",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nNOTE:Sahjanand Polyweaves Pvt. Ltd. - MANAGING DIRECTOR\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-23T16:05:00.000000",
             "updatedAt": "2026-08-23T16:05:00.000000",
@@ -443,6 +443,16 @@ async def dynamic_redirect(short_code: str, request: Request):
 
     # 2. Handle vCard Mobile User Profile Page
     if qr_type == "vcard" or "VCARD" in destination_url.upper():
+        # If static QR or ghanshyam-card, return raw vCard payload directly for native contact screen
+        if not qr.get("isDynamic", True) or short_code == "ghanshyam-card":
+            return Response(
+                content=destination_url,
+                media_type="text/vcard; charset=utf-8",
+                headers={
+                    "Content-Disposition": 'inline; filename="ghanshyam_dobariya.vcf"'
+                }
+            )
+        
         profile = parse_vcard_data(destination_url)
         
         # Apply B.S. CHOUHAN Name Formatting Rule (Add dots after single characters)

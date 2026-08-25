@@ -399,7 +399,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (catalog) customUrls += `\r\nURL;TYPE=Catalog:${catalog}`;
     if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;
 
-    payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${name};;;\r\nFN:${name}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
+    const nameParts = name.trim().split(/\s+/);
+    let nProp = `;${name};;;`;
+    if (nameParts.length > 1) {
+      const lastName = nameParts.pop();
+      const firstName = nameParts.join(' ');
+      nProp = `${lastName};${firstName};;;`;
+    }
+
+    payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${name}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
 
     // For DYNAMIC QRs of ANY type: the QR matrix encodes the server short URL.
     // The raw payload (vCard string, destination URL, etc.) is stored in the DB.
@@ -977,7 +985,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (cat) customUrls += `\r\nURL;TYPE=Catalog:${cat}`;
       if (photo) customUrls += `\r\nPHOTO;VALUE=URI:${photo}\r\nURL;TYPE=Photo:${photo}`;
 
-      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:;${fn};;;\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
+      const fnParts = fn.trim().split(/\s+/);
+      let nProp = `;${fn};;;`;
+      if (fnParts.length > 1) {
+        const lastName = fnParts.pop();
+        const firstName = fnParts.join(' ');
+        nProp = `${lastName};${firstName};;;`;
+      }
+
+      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
     } else {
       newPayload = document.getElementById('editDestinationUrl')?.value.trim();
       if (!newPayload) return alert('Please enter a destination URL');

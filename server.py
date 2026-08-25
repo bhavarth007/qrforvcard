@@ -12,7 +12,7 @@ import secrets
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -793,6 +793,22 @@ async def dynamic_redirect(short_code: str, request: Request):
         </html>
         """,
         status_code=200
+    )
+@app.get("/vcf/{short_code}")
+async def download_vcf(short_code: str):
+    db = load_db()
+    qr = next((item for item in db.get("qrcodes", []) if item.get("shortCode") == short_code), None)
+    if not qr:
+        raise HTTPException(status_code=404, detail="vCard not found")
+    destination_url = qr.get("destinationUrl", "")
+    if "VCARD" not in destination_url.upper():
+        raise HTTPException(status_code=400, detail="QR code is not a vCard")
+    profile = parse_vcard_data(destination_url)
+    fn_slug = profile.get("fn", "contact").lower().replace(" ", "_") or "contact"
+    return Response(
+        content=destination_url,
+        media_type="text/vcard; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{fn_slug}.vcf"'}
     )
 
 

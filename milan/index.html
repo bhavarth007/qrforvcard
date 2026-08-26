@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MILAN HIDAD - Digital Business Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #090d16;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+        }
+
+        .profile-card {
+            background: rgba(18, 24, 39, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 440px;
+            padding: 2.25rem 1.5rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar-box {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem auto;
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.45);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+        }
+
+        .profile-title {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .profile-org {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 1.75rem;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.75rem;
+            text-align: left;
+        }
+
+        .info-item {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 0.9rem 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            color: #f8fafc;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .info-item:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(99, 102, 241, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.15rem;
+        }
+
+        .info-label {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-size: 0.92rem;
+            font-weight: 600;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            color: #f1f5f9;
+        }
+
+        .btn-save {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #ffffff;
+            border: none;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+        }
+
+        .btn-save:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <div id="avatarContainer">
+            <div class="avatar-box">MH</div>
+        </div>
+        <h1 class="profile-name" id="dispName">MILAN HIDAD</h1>
+        <p class="profile-title" id="dispTitle">MANAGER</p>
+        <p class="profile-org" id="dispOrg">Ghanshyam Synthetics / Silken Sonnets</p>
+
+        <div class="info-list">
+            <a href="tel:+916355979500" class="info-item" id="itemPhone">
+                <div class="info-icon" style="color:#ec4899; background:rgba(236,72,153,0.15);">📞</div>
+                <div>
+                    <div class="info-label">MOBILE PHONE</div>
+                    <div class="info-value" id="valPhone">+916355979500</div>
+                </div>
+            </a>
+
+            <a href="mailto:milanhidad3215@gmail.com" class="info-item" id="itemEmail">
+                <div class="info-icon" style="color:#818cf8; background:rgba(99,102,241,0.15);">✉️</div>
+                <div>
+                    <div class="info-label">EMAIL ADDRESS</div>
+                    <div class="info-value" id="valEmail">milanhidad3215@gmail.com</div>
+                </div>
+            </a>
+
+            <div class="info-item" id="itemOrg">
+                <div class="info-icon" style="color:#3b82f6; background:rgba(59,130,246,0.15);">🏢</div>
+                <div>
+                    <div class="info-label">ORGANIZATION</div>
+                    <div class="info-value" id="valOrg">Ghanshyam Synthetics / Silken Sonnets</div>
+                </div>
+            </div>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=4308%2F8%2C+ROAD+NO.+43-B%2C+SACHIN+GIDC%2CSURAT%2CGUJARAT-394230%2CINDIA" target="_blank" class="info-item" id="itemAddr">
+                <div class="info-icon" style="color:#ef4444; background:rgba(239,68,68,0.15);">📍</div>
+                <div>
+                    <div class="info-label">CORPORATE OFFICE</div>
+                    <div class="info-value" id="valAddr">4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA</div>
+                </div>
+            </a>
+
+            <a href="https://wa.me/916355979500" target="_blank" class="info-item" id="itemWa">
+                <div class="info-icon" style="color:#25D366; background:rgba(37,211,102,0.15);">💬</div>
+                <div>
+                    <div class="info-label">WHATSAPP</div>
+                    <div class="info-value">Chat on WhatsApp</div>
+                </div>
+            </a>
+        </div>
+
+        <button class="btn-save" id="btnDownloadVCF">
+            📇 Add Contact to Phone
+        </button>
+    </div>
+
+    <script>
+        // Default State
+        var profileData = {
+            fn: "MILAN HIDAD",
+            title: "MANAGER",
+            org: "Ghanshyam Synthetics / Silken Sonnets",
+            phone: "+916355979500",
+            email: "milanhidad3215@gmail.com",
+            addr: "4308/8, Road No. 43-B, Sachin GIDC, Surat, Gujarat 394230, India",
+            wa: "916355979500"
+        };
+
+        function formatWhatsappUrl(numStr) {
+            if (!numStr) return "https://wa.me/916355979500";
+            var digits = numStr.replace(/\D/g, '');
+            if (digits.length === 10) {
+                digits = "91" + digits;
+            }
+            return "https://wa.me/" + digits;
+        }
+
+        function downloadVCard() {
+            var phoneVal = profileData.phone.replace(/[^0-9+]/g, '');
+            var waVal = formatWhatsappUrl(profileData.wa);
+            var nameParts = profileData.fn.trim().split(/\s+/);
+            var nProp = ";" + profileData.fn + ";;;";
+            if (nameParts.length > 1) {
+                var lastName = nameParts.pop();
+                var firstName = nameParts.join(' ');
+                nProp = lastName + ";" + firstName + ";;;";
+            }
+            var vcardLines = [
+                "BEGIN:VCARD",
+                "VERSION:3.0",
+                "N:" + nProp,
+                "FN:" + profileData.fn,
+                "ORG:" + profileData.org,
+                "TITLE:" + profileData.title,
+                "TEL;TYPE=CELL:" + phoneVal,
+                "EMAIL:" + (profileData.email || ""),
+                "item1.ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
+                "item1.X-ABLabel:Address-1",
+                "item2.URL:" + waVal,
+                "item2.X-ABLabel:WhatsApp",
+                "NOTE:" + profileData.org + " - " + profileData.title,
+                "END:VCARD"
+            ];
+            var vcardData = vcardLines.join("\r\n");
+
+            var blob = new Blob([vcardData], { type: "text/vcard;charset=utf-8;" });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', profileData.fn.toLowerCase().replace(/\s+/g, '_') + ".vcf");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Add Contact Download Event Listener
+        document.getElementById('btnDownloadVCF').addEventListener('click', downloadVCard);
+
+        // Live Sync with Render backend (if available)
+        (function syncFromRenderBackend() {
+            var renderApiUrl = "https://qrforvcard.onrender.com/api/qrcodes";
+            fetch(renderApiUrl, { mode: 'cors' })
+                .then(function(res) { return res.json(); })
+                .then(function(qrcodes) {
+                    var target = qrcodes.find(function(q) {
+                        return q.shortCode === "milan-card" || q.shortCode === "milan" || q.id === "qr-milan-card";
+                    });
+                    if (target && target.destinationUrl) {
+                        parseAndApplyVCard(target.destinationUrl);
+                    }
+                })
+                .catch(function(e) {
+                    // Silently keep instant default state
+                });
+        })();
+
+        function parseAndApplyVCard(rawVcard) {
+            if (!rawVcard || !rawVcard.includes("VCARD")) return;
+
+            var fnMatch = rawVcard.match(/FN:(.*)/i);
+            if (fnMatch) profileData.fn = fnMatch[1].trim();
+
+            var titleMatch = rawVcard.match(/TITLE:(.*)/i);
+            if (titleMatch) profileData.title = titleMatch[1].trim();
+
+            var orgMatch = rawVcard.match(/ORG:(.*)/i);
+            if (orgMatch) profileData.org = orgMatch[1].trim();
+
+            var phoneMatch = rawVcard.match(/TEL[^:]*:(.*)/i);
+            if (phoneMatch) {
+                var p = phoneMatch[1].trim();
+                var pDigits = p.replace(/\D/g, '');
+                if (pDigits.length === 10) p = "+91" + pDigits;
+                profileData.phone = p;
+            }
+
+            var emailMatch = rawVcard.match(/EMAIL[^:]*:(.*)/i);
+            if (emailMatch) profileData.email = emailMatch[1].trim();
+
+            var addrMatch = rawVcard.match(/ADR;TYPE=WORK:(.*)/i);
+            if (addrMatch) {
+                var rawA = addrMatch[1].trim().replace(/^;+/, '').replace(/;+$/, '');
+                var parts = rawA.split(';').map(function(s) { return s.trim(); }).filter(Boolean);
+                profileData.addr = parts.join(', ');
+            }
+
+            var waMatch = rawVcard.match(/URL;TYPE=WhatsApp:(.*)/i);
+            if (waMatch) profileData.wa = waMatch[1].trim();
+
+            // Update DOM Elements
+            document.getElementById('dispName').textContent = profileData.fn;
+            document.getElementById('dispTitle').textContent = profileData.title;
+            document.getElementById('dispOrg').textContent = profileData.org;
+            document.getElementById('valPhone').textContent = profileData.phone;
+            document.getElementById('itemPhone').href = "tel:" + profileData.phone;
+            if (profileData.email) {
+                document.getElementById('valEmail').textContent = profileData.email;
+                document.getElementById('itemEmail').href = "mailto:" + profileData.email;
+            }
+            document.getElementById('valOrg').textContent = profileData.org;
+            document.getElementById('valAddr').textContent = profileData.addr;
+            document.getElementById('itemAddr').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(profileData.addr);
+            document.getElementById('itemWa').href = formatWhatsappUrl(profileData.wa);
+        }
+    </script>
+</body>
+</html>

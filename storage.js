@@ -163,7 +163,7 @@ function initializeSeedData() {
         "type": "vcard",
         "isDynamic": false,
         "shortCode": "ghanshyam-card",
-        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nNOTE:Sahjanand Polyweaves Pvt. Ltd. - MANAGING DIRECTOR\r\nEND:VCARD",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nNOTE:Sahjanand Polyweaves Pvt. Ltd. - MANAGING DIRECTOR\r\nEND:VCARD",
         "active": true,
         "createdAt": "2026-08-23T16:05:00.000000",
         "updatedAt": "2026-08-23T16:05:00.000000",
@@ -179,6 +179,56 @@ function initializeSeedData() {
             "logoText": "Sahjanand Polyweaves Pvt. Ltd.",
             "frameStyle": "gold_card",
             "frameText": "GHANSHYAM DOBARIYA",
+            "frameColor": "#d4af37"
+        }
+    },
+    {
+        "id": "qr-shailesh-card",
+        "title": "SHAILESH DHOLARIYA - Ghanshyam Synthetics Gold Card",
+        "type": "vcard",
+        "isDynamic": false,
+        "shortCode": "shailesh-card",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DHOLARIYA;SHAILESH;;;\r\nFN:SHAILESH DHOLARIYA\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:SALES HEAD\r\nTEL;TYPE=CELL:+919925933568\r\nEMAIL:shaileshdholariya87@gmail.com\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.URL:https://wa.me/919925933568\r\nitem2.X-ABLabel:WhatsApp\r\nNOTE:Ghanshyam Synthetics / Silken Sonnets - SALES HEAD\r\nEND:VCARD",
+        "active": true,
+        "createdAt": "2026-08-26T13:00:00.000000",
+        "updatedAt": "2026-08-26T13:00:00.000000",
+        "options": {
+            "colorDark": "#000000",
+            "colorLight": "#ffffff",
+            "gradient": false,
+            "gradientColor": "#000000",
+            "bodyStyle": "square",
+            "eyeStyle": "square",
+            "eyeBallStyle": "square",
+            "logoIcon": "none",
+            "logoText": "Ghanshyam Synthetics / Silken Sonnets",
+            "frameStyle": "gold_card",
+            "frameText": "SHAILESH DHOLARIYA",
+            "frameColor": "#d4af37"
+        }
+    },
+    {
+        "id": "qr-milan-card",
+        "title": "MILAN HIDAD - Ghanshyam Synthetics Gold Card",
+        "type": "vcard",
+        "isDynamic": false,
+        "shortCode": "milan-card",
+        "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:HIDAD;MILAN;;;\r\nFN:MILAN HIDAD\r\nORG:Ghanshyam Synthetics / Silken Sonnets\r\nTITLE:MANAGER\r\nTEL;TYPE=CELL:+916355979500\r\nEMAIL:milanhidad3215@gmail.com\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.URL:https://wa.me/916355979500\r\nitem2.X-ABLabel:WhatsApp\r\nNOTE:Ghanshyam Synthetics / Silken Sonnets - MANAGER\r\nEND:VCARD",
+        "active": true,
+        "createdAt": "2026-08-26T13:00:00.000000",
+        "updatedAt": "2026-08-26T13:00:00.000000",
+        "options": {
+            "colorDark": "#000000",
+            "colorLight": "#ffffff",
+            "gradient": false,
+            "gradientColor": "#000000",
+            "bodyStyle": "square",
+            "eyeStyle": "square",
+            "eyeBallStyle": "square",
+            "logoIcon": "none",
+            "logoText": "Ghanshyam Synthetics / Silken Sonnets",
+            "frameStyle": "gold_card",
+            "frameText": "MILAN HIDAD",
             "frameColor": "#d4af37"
         }
     }

@@ -269,17 +269,10 @@
                 "ORG:" + profileData.org,
                 "TITLE:" + profileData.title,
                 "TEL;TYPE=CELL:" + phoneVal,
-                "EMAIL:",
-                "item1.ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
-                "item1.X-ABLabel:Address-1"
+                "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
+                "URL;TYPE=WhatsApp:" + waVal,
+                "END:VCARD"
             ];
-            if (profileData.addr2) {
-                vcardLines.push("item2.ADR;TYPE=HOME:;;" + profileData.addr2 + ";;;;");
-                vcardLines.push("item2.X-ABLabel:Address-2");
-            }
-            vcardLines.push("item3.URL:" + waVal);
-            vcardLines.push("item3.X-ABLabel:WhatsApp");
-            vcardLines.push("END:VCARD");
             var vcardData = vcardLines.join("\r\n");
 
             var blob = new Blob([vcardData], { type: "text/vcard;charset=utf-8;" });

@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nProp = `${lastName};${firstName};;;`;
     }
 
-    payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${name}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
+    payload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${name}\r\nTITLE:${title}\r\nORG:${org}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
 
     // For DYNAMIC QRs of ANY type: the QR matrix encodes the server short URL.
     // The raw payload (vCard string, destination URL, etc.) is stored in the DB.
@@ -1010,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nProp = `${lastName};${firstName};;;`;
       }
 
-      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${fn}\r\nORG:${org}\r\nTITLE:${title}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
+      newPayload = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${nProp}\r\nFN:${fn}\r\nTITLE:${title}\r\nORG:${org}\r\nTEL;TYPE=CELL:${phone}\r\nEMAIL:${email}${adrStr}${customUrls}\r\nEND:VCARD`;
     } else {
       newPayload = document.getElementById('editDestinationUrl')?.value.trim();
       if (!newPayload) return alert('Please enter a destination URL');

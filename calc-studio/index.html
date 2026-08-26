@@ -215,6 +215,14 @@
                     <div class="info-value">Chat on WhatsApp</div>
                 </div>
             </a>
+
+            <div class="info-item" id="itemWechat">
+                <div class="info-icon" style="color:#07C160; background:rgba(7,193,96,0.15);">💬</div>
+                <div>
+                    <div class="info-label">WECHAT NO.</div>
+                    <div class="info-value" id="valWechat">13004119438</div>
+                </div>
+            </div>
         </div>
 
         <button class="btn-save" id="btnDownloadVCF">
@@ -230,7 +238,8 @@
             org: "Sahjanand Polyweaves Pvt. Ltd.",
             phone: "+919909143742",
             addr: "4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230,INDIA",
-            wa: "919909143742"
+            wa: "919909143742",
+            wechat: "13004119438"
         };
 
         function formatWhatsappUrl(numStr) {
@@ -263,6 +272,8 @@
                 "EMAIL:",
                 "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
                 "URL;TYPE=WhatsApp:" + waVal,
+                "X-WECHAT:" + profileData.wechat,
+                "URL;TYPE=WeChat:" + profileData.wechat,
                 "END:VCARD"
             ].join("\r\n");
 
@@ -329,6 +340,9 @@
             var waMatch = rawVcard.match(/URL;TYPE=WhatsApp:(.*)/i);
             if (waMatch) profileData.wa = waMatch[1].trim();
 
+            var wechatMatch = rawVcard.match(/(?:X-WECHAT|URL;TYPE=WeChat):(.*)/i);
+            if (wechatMatch) profileData.wechat = wechatMatch[1].trim();
+
             // Update DOM Elements
             document.getElementById('dispName').textContent = profileData.fn;
             document.getElementById('dispTitle').textContent = profileData.title;
@@ -339,6 +353,8 @@
             document.getElementById('valAddr').textContent = profileData.addr;
             document.getElementById('itemAddr').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(profileData.addr);
             document.getElementById('itemWa').href = formatWhatsappUrl(profileData.wa);
+            var valWechat = document.getElementById('valWechat');
+            if (valWechat) valWechat.textContent = profileData.wechat;
         }
     </script>
 </body>

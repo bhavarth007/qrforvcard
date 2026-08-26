@@ -34,7 +34,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": True,
             "shortCode": "ghanshyam",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;GHANSHYAM DOBARIYA;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:9909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC,SURAT,GUJARAT-394230;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/9909143742\r\nX-WECHAT:13004119438\r\nURL;TYPE=WeChat:13004119438\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-05T12:45:50.000791",
             "updatedAt": "2026-08-05T12:46:46.409094",
@@ -178,7 +178,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": False,
             "shortCode": "ghanshyam-card",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC, SURAT, GUJARAT-394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. C1B-4308/8, ROAD NO. 43-B, SACHIN GIDC, SURAT, GUJARAT-394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nX-WECHAT:13004119438\r\nURL;TYPE=WeChat:13004119438\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-23T16:05:00.000000",
             "updatedAt": "2026-08-23T16:05:00.000000",
@@ -297,7 +297,7 @@ def parse_user_agent(ua_str: str) -> tuple[str, str]:
 
 # Helper to parse raw vCard payload into key-values
 def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
-    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": "", "addr1": "", "addr2": "", "wa": "", "fb": "", "cat": "", "photo": ""}
+    info = {"fn": "User Profile", "org": "", "title": "Digital Business Card", "phone": "", "email": "", "addr1": "", "addr2": "", "wa": "", "wechat": "", "fb": "", "cat": "", "photo": ""}
     
     fn_match = re.search(r'FN:(.*)', raw_vcard, re.IGNORECASE)
     if fn_match:
@@ -356,6 +356,14 @@ def parse_vcard_data(raw_vcard: str) -> Dict[str, str]:
         if len(digits) == 10:
             digits = '91' + digits
         info["wa"] = f"https://wa.me/{digits}" if digits else wa_val
+
+    wechat = re.search(r'X-WECHAT:(.*)', raw_vcard, re.IGNORECASE)
+    if not wechat:
+        wechat = re.search(r'URL;TYPE=WeChat:(.*)', raw_vcard, re.IGNORECASE)
+    if not wechat:
+        wechat = re.search(r'X-SOCIALPROFILE;type=wechat:(.*)', raw_vcard, re.IGNORECASE)
+    if wechat:
+        info["wechat"] = wechat.group(1).strip()
         
     fb = re.search(r'URL;TYPE=Facebook:(.*)', raw_vcard, re.IGNORECASE)
     if fb:
@@ -780,6 +788,16 @@ async def dynamic_redirect(short_code: str, request: Request):
                         </div>
                     </a>
                     ''' if profile['wa'] else ''}
+
+                    {f'''
+                    <div class="info-item">
+                        <div class="info-icon" style="color:#07C160; background:rgba(7,193,96,0.15);">💬</div>
+                        <div>
+                            <div class="info-label">WeChat</div>
+                            <div class="info-value">{profile['wechat']}</div>
+                        </div>
+                    </div>
+                    ''' if profile.get('wechat') else ''}
 
                     {f'''
                     <a href="{profile['fb']}" target="_blank" class="info-item">

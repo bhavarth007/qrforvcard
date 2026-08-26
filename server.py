@@ -178,7 +178,7 @@ DEFAULT_DB = {
             "type": "vcard",
             "isDynamic": False,
             "shortCode": "ghanshyam-card",
-            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nADR;TYPE=WORK:;;4308/8, ROAD NO. 43-B, SACHIN GIDC, SURAT, GUJARAT-394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/919909143742\r\nEND:VCARD",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;GHANSHYAM;;;\r\nFN:GHANSHYAM DOBARIYA\r\nORG:Sahjanand Polyweaves Pvt. Ltd.\r\nTITLE:MANAGING DIRECTOR\r\nTEL;TYPE=CELL:+919909143742\r\nitem1.ADR;TYPE=WORK:;;4308/8, Road No. 43-B, Sachin GIDC;Surat;Gujarat;394230;India\r\nitem1.X-ABLabel:Address-1\r\nitem2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India\r\nitem2.X-ABLabel:Address-2\r\nitem3.URL:https://wa.me/919909143742\r\nitem3.X-ABLabel:WhatsApp\r\nNOTE:Sahjanand Polyweaves Pvt. Ltd. - MANAGING DIRECTOR\r\nEND:VCARD",
             "active": True,
             "createdAt": "2026-08-23T16:05:00.000000",
             "updatedAt": "2026-08-23T16:05:00.000000",

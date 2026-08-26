@@ -216,14 +216,6 @@
                 </div>
             </a>
 
-            <a href="https://www.google.com/maps/search/?api=1&query=Plot+No.+A1%2F8%2C+Road+No.+9%2C+Hojiwala+Ind.+Estate%2C+Sachin%2C+Surat%2C+Gujarat+394230%2C+India" target="_blank" class="info-item" id="itemAddr2">
-                <div class="info-icon" style="color:#f59e0b; background:rgba(245,158,11,0.15);">🏭</div>
-                <div>
-                    <div class="info-label">FACTORY LOCATION</div>
-                    <div class="info-value" id="valAddr2">Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate, Sachin, Surat, Gujarat 394230, India</div>
-                </div>
-            </a>
-
             <a href="https://wa.me/919925933568" target="_blank" class="info-item" id="itemWa">
                 <div class="info-icon" style="color:#25D366; background:rgba(37,211,102,0.15);">💬</div>
                 <div>
@@ -278,13 +270,8 @@
                 "TITLE:" + profileData.title,
                 "TEL;TYPE=CELL:" + phoneVal,
                 "EMAIL:" + (profileData.email || ""),
-                "item1.ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
-                "item1.X-ABLabel:Address-1",
-                "item2.ADR;TYPE=HOME:;;Plot No. A1/8, Road No. 9, Hojiwala Ind. Estate;Sachin, Surat;Gujarat;394230;India",
-                "item2.X-ABLabel:Address-2",
-                "item3.URL:" + waVal,
-                "item3.X-ABLabel:WhatsApp",
-                "X-SOCIALPROFILE;TYPE=whatsapp:" + waVal,
+                "ADR;TYPE=WORK:;;" + profileData.addr + ";;;;",
+                "URL;TYPE=WhatsApp:" + waVal,
                 "END:VCARD"
             ];
             var vcardData = vcardLines.join("\r\n");

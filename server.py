@@ -251,7 +251,7 @@ DEFAULT_DB = {
             "id": "qr-meet-card",
             "title": "MEET DOBARIYA - Sahjanand Weave Tex Gold Card",
             "type": "vcard",
-            "isDynamic": True,
+            "isDynamic": False,
             "shortCode": "meet-card",
             "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;MEET;;;\r\nFN:MEET DOBARIYA\r\nTITLE:DIRECTOR\r\nORG:Sahjanand Weave Tex Private Limited\r\nTEL;TYPE=CELL:+918200085654\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. 428/7, ROAD NO. 4D, SACHIN GIDC, SURAT, GUJARAT - 394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/918200085654\r\nEND:VCARD",
             "active": True,
@@ -527,7 +527,7 @@ async def dynamic_redirect(short_code: str, request: Request):
     # 2. Handle vCard Mobile User Profile Page
     if qr_type == "vcard" or "VCARD" in destination_url.upper():
         # If static QR or gold card, return raw vCard payload directly for native contact screen
-        if not qr.get("isDynamic", True) or short_code in ["ghanshyam-card", "shailesh-card", "milan-card"]:
+        if not qr.get("isDynamic", True) or short_code in ["ghanshyam-card", "shailesh-card", "milan-card", "meet-card"]:
             profile = parse_vcard_data(destination_url)
             fn_slug = profile.get("fn", "contact").lower().replace(" ", "_")
             return Response(

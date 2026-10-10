@@ -220,6 +220,113 @@
         "frameText": "MILAN HIDAD",
         "frameColor": "#d4af37"
       }
+    },
+    {
+      "id": "qr-meet-card",
+      "title": "MEET DOBARIYA - Sahjanand Weave Tex Gold Card",
+      "type": "vcard",
+      "isDynamic": true,
+      "shortCode": "meet-card",
+      "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;MEET;;;\r\nFN:MEET DOBARIYA\r\nTITLE:DIRECTOR\r\nORG:Sahjanand Weave Tex Private Limited\r\nTEL;TYPE=CELL:+918200085654\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. 428/7, ROAD NO. 4D, SACHIN GIDC, SURAT, GUJARAT - 394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/918200085654\r\nEND:VCARD",
+      "active": true,
+      "options": {
+        "colorDark": "#000000",
+        "colorLight": "#ffffff",
+        "gradient": false,
+        "gradientColor": "#000000",
+        "bodyStyle": "square",
+        "eyeStyle": "square",
+        "eyeBallStyle": "square",
+        "logoIcon": "none",
+        "logoText": "Sahjanand Weave Tex Private Limited",
+        "frameStyle": "gold_card",
+        "frameText": "MEET DOBARIYA",
+        "frameColor": "#d4af37"
+      },
+      "createdAt": "2026-10-10T12:43:51.463108",
+      "updatedAt": "2026-10-10T12:43:51.463116"
+    }
+  ],
+  "analytics": [
+    {
+      "id": "scan-1791617556433",
+      "qrId": "qr-meet-card",
+      "shortCode": "meet-card",
+      "timestamp": "2026-10-10T13:02:36.433530",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791617556354",
+      "qrId": "qr-milan-card",
+      "shortCode": "milan-card",
+      "timestamp": "2026-10-10T13:02:36.354143",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791617556264",
+      "qrId": "qr-shailesh-card",
+      "shortCode": "shailesh-card",
+      "timestamp": "2026-10-10T13:02:36.264359",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791617556146",
+      "qrId": "qr-ghanshyam-card",
+      "shortCode": "ghanshyam-card",
+      "timestamp": "2026-10-10T13:02:36.146751",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791617534969",
+      "qrId": "qr-meet-card",
+      "shortCode": "meet-card",
+      "timestamp": "2026-10-10T13:02:14.969425",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791616359604",
+      "qrId": "qr-meet-card",
+      "shortCode": "meet-card",
+      "timestamp": "2026-10-10T12:42:39.604764",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791615990807",
+      "qrId": "qr-meet-card",
+      "shortCode": "meet-card",
+      "timestamp": "2026-10-10T12:36:30.807782",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
+    },
+    {
+      "id": "scan-1791615917060",
+      "qrId": "qr-meet-card",
+      "shortCode": "meet-card",
+      "timestamp": "2026-10-10T12:35:17.060582",
+      "device": "Desktop (Windows)",
+      "browser": "Chrome",
+      "ip": "127.0.0.1",
+      "country": "Local Server"
     }
   ]
 }

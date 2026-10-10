@@ -246,6 +246,31 @@ DEFAULT_DB = {
                 "frameText": "MILAN HIDAD",
                 "frameColor": "#d4af37"
             }
+        },
+        {
+            "id": "qr-meet-card",
+            "title": "MEET DOBARIYA - Sahjanand Weave Tex Gold Card",
+            "type": "vcard",
+            "isDynamic": True,
+            "shortCode": "meet-card",
+            "destinationUrl": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:DOBARIYA;MEET;;;\r\nFN:MEET DOBARIYA\r\nTITLE:DIRECTOR\r\nORG:Sahjanand Weave Tex Private Limited\r\nTEL;TYPE=CELL:+918200085654\r\nEMAIL:\r\nADR;TYPE=WORK:;;PLOT NO. 428/7, ROAD NO. 4D, SACHIN GIDC, SURAT, GUJARAT - 394230, INDIA;;;;\r\nURL;TYPE=WhatsApp:https://wa.me/918200085654\r\nEND:VCARD",
+            "active": True,
+            "createdAt": "2026-10-10T10:00:00.000000",
+            "updatedAt": "2026-10-10T10:00:00.000000",
+            "options": {
+                "colorDark": "#000000",
+                "colorLight": "#ffffff",
+                "gradient": False,
+                "gradientColor": "#000000",
+                "bodyStyle": "square",
+                "eyeStyle": "square",
+                "eyeBallStyle": "square",
+                "logoIcon": "none",
+                "logoText": "Sahjanand Weave Tex Private Limited",
+                "frameStyle": "gold_card",
+                "frameText": "MEET DOBARIYA",
+                "frameColor": "#d4af37"
+            }
         }
     ]
 }
